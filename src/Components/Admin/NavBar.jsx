@@ -1,14 +1,16 @@
-import { Avatar } from "primereact/avatar";
-import { Button } from "primereact/button";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Menubar } from "primereact/menubar";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { Badge } from "primereact/badge";
+import { Avatar } from "primereact/avatar";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Button } from "primereact/button";
+import { useEffect, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser, logout } from "../Redux/Slice/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.UserAuth);
 
   const getFirstLetter = (str) => {
     if (!str) return "";
@@ -19,10 +21,8 @@ function NavBar() {
     if (!localStorage.getItem("userToken")) {
       navigate("/login");
     }
-    dispatch(getUser());
   }, [navigate]);
   const accept = () => {
-    dispatch(logout());
     if (!localStorage.getItem("userToken")) {
       navigate("/login");
     }
@@ -46,37 +46,13 @@ function NavBar() {
       url: "/",
     },
     {
-      label: "Student",
+      label: "Setup",
       items: [
         {
-          label: "Enquiry",
-          url: "/school/enqiry",
+          label: "User",
+          command: () => navigate("/admin/usermang"),
         },
-        {
-          label: "Admission",
-          url: "/school/admission",
-        },
-        {
-          label: "Course",
-          url: "/school/course",
-        },
-        {
-          label: "Assign Course",
-          url: "/school/assigncourse",
-        },
-      ],
-    },
-    {
-      label: "Fees",
-      items: [
-        {
-          label: "Fees Collection",
-          url: "/fees/collection",
-        },
-        {
-          label: "Admission",
-          url: "/school/admission",
-        },
+       
       ],
     },
   ];

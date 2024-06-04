@@ -1,65 +1,102 @@
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Message } from "primereact/message";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, userlogin } from "../Redux/Slice/UserSlice";
+import { useNavigate } from "react-router-dom";
+export default function LoginForm() {
+  const [formData, setFormData] = useState({ email: null, password: null });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.UserAuth);
+  const formDataHandler = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const onLogin = () => {
+    dispatch(userlogin(formData)).then(() => {
+      if (localStorage.getItem("userToken")) {
+        navigate("/");
+      }
+    });
 
-export default function LoginForm(params) {
-    return<>
-  <div className="absolute top-0 bottom-0 left-0 right-0 flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 z-50 bg-white">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+  };
+  useEffect(() => {
+    if (localStorage.getItem("userToken")) {
+      navigate("/");
+    }
+  }, [navigate]);
+  return (
+    <>
+      <div className="absolute top-0 bottom-0 left-0 right-0 flex min-h-full flex-1 flex-col justify-center px-6 py-0 lg:px-8 z-50 bg-white">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm relative">
+          <h2 className="text-center text-2xl font-bold leading-0text-gray-900">
             Login
           </h2>
         </div>
-
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <div className="h-14">
+            {error && (
+              <Message text={error} severity="error" className="w-full" />
+            )}
+          </div>
+          <div className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Email address
               </label>
               <div className="mt-2">
-                <input
+                <InputText
                   id="email"
                   name="email"
-                  type="email"
+                  value={formData.email}
+                  onChange={formDataHandler}
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className=" pl-3 h-10 w-full border border-slate-300 rounded-lg"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
                   Password
-                </label>               
+                </label>
               </div>
               <div className="mt-2">
-                <input
+                <Password
                   id="password"
                   name="password"
+                  value={formData.password}
+                  onChange={formDataHandler}
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  feedback={false}
+                  inputClassName="pl-3 w-full h-10"
+                  className="w-full border border-slate-300 rounded-lg"
                 />
               </div>
             </div>
 
             <div>
-              <Button              
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Login
-              </Button>
+              <Button
+                label="Login"
+                onClick={onLogin}
+                className="w-full bg-cyan-500 py-3 text-white  "
+              />
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </>
+  );
 }

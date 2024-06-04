@@ -1,38 +1,80 @@
 import { Dialog } from "primereact/dialog";
-import { useRef, useState } from "react";
-import EnquiryForm from "../../Utilites/EnquiryForm";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "primereact/button";
-import { Calendar } from "primereact/calendar";
+import { IconField } from "primereact/iconfield";
+import { InputText } from "primereact/inputtext";
+import { InputIcon } from "primereact/inputicon";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
 import {
   FaFilePdf,
   FaFileExcel,
   FaFileCsv,
-  FaEyeSlash,
   FaEye,
   FaPenToSquare,
   FaPlus,
+  FaEyeSlash,
 } from "react-icons/fa6";
-import { Dropdown } from "primereact/dropdown";
-import NewCourseForm from "../../Utilites/NewCourseForm";
+import CourseForm from "../../Utilites/CourseForm";
+import NavBar from "../NavBar";
+import { useDispatch, useSelector } from "react-redux";
+import { getCoursebyId, updateCourse } from "../../Redux/Slice/CourseSlice";
+import { Toast } from "primereact/toast";
 
 function Course(params) {
   const [openModel, setOpenModel] = useState(false);
+  const [selectedData, setSelectedData] = useState();
   const [mode, setMode] = useState("s");
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const countries = [
-    { name: "Australia", code: "AU" },
-    { name: "Brazil", code: "BR" },
-    { name: "China", code: "CN" },
-    { name: "Egypt", code: "EG" },
-    { name: "France", code: "FR" },
-    { name: "Germany", code: "DE" },
-    { name: "India", code: "IN" },
-    { name: "Japan", code: "JP" },
-    { name: "Spain", code: "ES" },
-    { name: "United States", code: "US" },
-  ];
+  const dispatch = useDispatch();
+  const toast = useRef();
+  const { userid } = useSelector((state) => state.UserAuth);
+  const { course, message, error, loading } = useSelector(
+    (state) => state.Course
+  );
+
+  const show = (message) => {
+    toast.current.show({ severity: "info", summary: message, life: 1000 });
+  };
+  const showWarn = (error) => {
+    toast.current.show({
+      severity: "warn",
+      summary: error,
+      life: 3000,
+    });
+  };
+  useEffect(() => {
+    if (message) {
+      show(message);
+    }
+    if (error) {
+      showWarn(message);
+    }
+  }, [message, error]);
+
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+
+    _filters["global"].value = value;
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    "country.name": { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    verified: { value: null, matchMode: FilterMatchMode.EQUALS },
+  });
+
+  useEffect(() => {
+    dispatch(getCoursebyId(userid));
+  }, [dispatch, userid]);
   const dt = useRef(null);
   const products = [];
   const cols = [
@@ -92,123 +134,183 @@ function Course(params) {
   };
 
   const header = (
-    <div className="flex items-center justify-end gap-2">
-      <Button
-        type="button"
-        icon={<FaFileCsv />}
-        disabled={products}
-        className="border-black w-12 h-12 rounded-full border-2"
-        onClick={() => exportCSV(false)}
-        data-pr-tooltip="CSV"
-      />
-      <Button
-        type="button"
-        disabled={products}
-        icon={<FaFileExcel color="#fff" />}
-        className="bg-green-500 border-black border w-12 h-12 rounded-full "
-        onClick={exportExcel}
-        data-pr-tooltip="XLS"
-      />
-      <Button
-        type="button"
-        disabled={products}
-        icon={<FaFilePdf color="#fff" />}
-        className="bg-red-500 border-black border w-12 h-12 rounded-full "
-        onClick={exportPdf}
-        data-pr-tooltip="PDF"
-      />
-    </div>
+    <>
+      <div className="flex justify-between">
+        <strong className="pb-3">Registered Courses</strong>
+      </div>
+      <div className="flex justify-between  items-center py-4">
+        <div className="flex justify-content-end">
+          <IconField iconPosition="right">
+            <InputIcon className="pi pi-search" />
+            <InputText
+              value={globalFilterValue}
+              onChange={onGlobalFilterChange}
+              placeholder="Keyword Search"
+              className="h-10 border-slate-300 border pl-3"
+            />
+          </IconField>
+        </div>
+        <Button
+          label="New Course"
+          icon={<FaPlus />}
+          className=" text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+          onClick={() => {
+            setMode("s");
+            setOpenModel(true);
+          }}
+        />
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            icon={<FaFileCsv />}
+            disabled={products}
+            className="border-black w-10 h-10 rounded-full border-2"
+            onClick={() => exportCSV(false)}
+            data-pr-tooltip="CSV"
+          />
+          <Button
+            type="button"
+            disabled={products}
+            icon={<FaFileExcel color="#fff" />}
+            className="bg-green-500 border-black border w-10 h-10 rounded-full "
+            onClick={exportExcel}
+            data-pr-tooltip="XLS"
+          />
+          <Button
+            type="button"
+            disabled={products}
+            icon={<FaFilePdf color="#fff" />}
+            className="bg-red-500 border-black border w-10 h-10 rounded-full "
+            onClick={exportPdf}
+            data-pr-tooltip="PDF"
+          />
+        </div>
+      </div>
+    </>
   );
 
-  const ActionbodyTemplate = () => {
+  const ActionbodyTemplate = (rowData) => {
     return (
-      <div className="flex items-center">
-        <Button label={<FaEye />} className="p-2" />
-        <Button label={<FaPenToSquare />} className="text-blue-500 p-2" />
+      <div className="flex items-center justify-center">
+        <Button
+          onClick={() =>
+            dispatch(
+              updateCourse({
+                ...rowData,
+                status: rowData.status === true ? false : true,
+              })
+            )
+          }
+          label={
+            rowData.status ? <FaEye size={20} /> : <FaEyeSlash size={20} />
+          }
+          className="p-2"
+        />
+        <Button
+          onClick={() => {
+            setMode("u");
+            setSelectedData(rowData);
+            setOpenModel(true);
+          }}
+          label={<FaPenToSquare />}
+          className="text-blue-500 p-2"
+        />
       </div>
     );
   };
-
+  const indexTemplate = (rowData, { rowIndex }) => {
+    return rowIndex + 1;
+  };
   return (
-    <div className="relative">
+    <div className="relative   bg-white">
+      <NavBar />
+      <Toast ref={toast} />
       <Dialog
         header="Course Form"
         position="top"
-        className="h-auto"
+        className="h-auto w-[30vw]"
         visible={openModel}
         onHide={() => setOpenModel(false)}
       >
-        <NewCourseForm mode={"s"} />
+        <CourseForm mode={mode} data={selectedData} />
       </Dialog>
-      <div className="p-3 m-4 border-t-4 rounded-lg border-blue-500 shadow-md">
-        <div className="flex justify-between">
-          <strong className="text-xl">Filter Records</strong>
-          <Button
-            label="Assign New Course"
-            icon={<FaPlus />}
-            className="py-3 px-5 m-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
-            onClick={() => {
-              setMode("s");
-              setOpenModel(true);
-            }}
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <label>Student</label>
-            <Dropdown
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.value)}
-              options={countries}
-              optionLabel="name"
-              filter
-              placeholder="Select student"
-              filterPlaceholder="Select student"
-              className="h-12 w-80 border-slate-500 border rounded-md"
-              inputClassName="pl-3"
-            />
-          </div>
 
-          <div className="flex flex-col">
-            <label>Courses</label>
-            <Dropdown
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.value)}
-              options={countries}
-              optionLabel="name"
-              filter
-              placeholder="Select Course"
-              filterPlaceholder="Select Course"
-              className="h-12 w-80  border-slate-500 border rounded-md"
-              inputClassName="pl-3"
-            />
-          </div>
-
-          <div className="flex gap-2 ml-8 ">
-            <Button label="Filter" className="bg-blue-500 text-white p-3" />
-            <Button label="Clear" className="bg-red-500 text-white p-3" />
-          </div>
-        </div>
-      </div>
-      <div className="shadow-md m-4 border-t-4 rounded-lg border-blue-500">
+      <div className="border-t-4 rounded-lg border-blue-500 shadow-slate-400 shadow-md m-4 p-2">
         <DataTable
+          value={course}
           size="small"
-          showGridlines={true}
+          showGridlines
+          filters={filters}
+          filterDisplay="row"
+          globalFilterFields={[
+            "name",
+            "country.name",
+            "representative.name",
+            "status",
+          ]}
           stripedRows
           header={header}
           tableStyle={{ minWidth: "50rem" }}
         >
-          <Column field="code" header="Sr." sortable></Column>
-          <Column field="category" header="Student Name" sortable></Column>
-          <Column field="quantity" header="Father Name" sortable></Column>
-          <Column field="category" header="Student Id" sortable></Column>
-          <Column field="quantity" header="Course Type" sortable></Column>
-          <Column field="quantity" header="Course Name" sortable></Column>
-          <Column field="quantity" header="Course Code" sortable></Column>
-          <Column field="quantity" header="Exam Fee" sortable></Column>
-          <Column field="quantity" header="Course Fee" sortable></Column>
-          <Column field="quantity" header="Duration" sortable></Column>
-          <Column field="quantity" header="Action" body={ActionbodyTemplate} sortable></Column>
+          <Column
+            field="code"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Sr."
+            sortable
+            body={indexTemplate}
+          ></Column>
+          <Column
+            field="courseType"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Course Type"
+            sortable
+          ></Column>
+          <Column
+            field="courseName"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Course Name"
+            sortable
+          ></Column>
+          <Column
+            field="courseCode"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Course Code"
+            sortable
+          ></Column>
+          <Column
+            field="certifiedAuthority"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Cerified Authority"
+            sortable
+          ></Column>
+          <Column
+            field="examFee"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Exam Fee"
+            sortable
+          ></Column>
+          <Column
+            field="courseFee"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Course Fee"
+            sortable
+          ></Column>
+          <Column
+            field="courseDuration"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Duration"
+            sortable
+          ></Column>
+          <Column
+            field="quantity"
+            headerClassName="p-3 border-black border  bg-slate-200"
+            header="Action"
+            body={ActionbodyTemplate}
+            sortable
+          ></Column>
         </DataTable>
       </div>
     </div>
