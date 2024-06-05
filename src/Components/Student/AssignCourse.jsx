@@ -273,7 +273,6 @@ function AssignCourse(params) {
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Student Name"
             sortable
-            body={(e) => console.log(e)}
           ></Column>
           <Column
             field="student.fatherName"

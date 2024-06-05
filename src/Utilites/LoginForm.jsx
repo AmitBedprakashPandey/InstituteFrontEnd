@@ -20,11 +20,12 @@ export default function LoginForm() {
         navigate("/");
       }
     });
-
   };
   useEffect(() => {
     if (localStorage.getItem("userToken")) {
       navigate("/");
+    }else{
+      navigate("/login");
     }
   }, [navigate]);
   return (

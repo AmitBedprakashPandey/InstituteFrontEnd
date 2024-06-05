@@ -30,6 +30,24 @@ export const getUser = createAsyncThunk(
   }
 );
 
+// export const getProtection = createAsyncThunk(
+//   "User/protect",
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.get(`${url}/protected`);
+//       return response.data;
+//     } catch (error) {
+//       if (error.response.status === 403) {
+//         localStorage.removeItem("email");
+//         localStorage.removeItem("userToken");
+//         localStorage.removeItem("expired");
+//         localStorage.removeItem("userid");
+//       }
+//       return rejectWithValue(error.response.data.error);
+//     }
+//   }
+// );
+
 const AdmissionSlice = createSlice({
   name: "Admission",
   initialState: {

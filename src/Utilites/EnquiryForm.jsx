@@ -7,20 +7,28 @@ import { Column } from "primereact/column";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { FileUpload } from "primereact/fileupload";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
-import { createEnquiry, getclear, updateEnquiry } from "../Redux/Slice/EnquirySlice";
+import {
+  createEnquiry,
+  getclear,
+  updateEnquiry,
+} from "../Redux/Slice/EnquirySlice";
 import { getUser } from "../Redux/Slice/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Toast } from "primereact/toast";
+import { getCoursebyId } from "../Redux/Slice/CourseSlice";
+import moment from "moment/moment";
 function EnquiryForm({ mode, data }) {
   const [formData, setFormData] = useState();
+  const [selectedData, setSelectedData] = useState();
   const { message, error } = useSelector((state) => state.Enquiry);
   const dispatch = useDispatch();
   const toast = useRef();
   const { userid } = useSelector((state) => state.UserAuth);
+  const { course } = useSelector((state) => state.Course);
 
   const formDatahandler = (e) => {
     setFormData({
@@ -41,7 +49,14 @@ function EnquiryForm({ mode, data }) {
       life: 3000,
     });
   };
-
+  useEffect(() => {
+    setSelectedData(
+      course.filter((item) => item.courseName === formData?.course)
+    );
+  }, [formData?.course]);
+  useLayoutEffect(() => {
+    dispatch(getCoursebyId(userid));
+  }, [dispatch]);
   useEffect(() => {
     if (message) {
       show(message);
@@ -49,7 +64,7 @@ function EnquiryForm({ mode, data }) {
     if (error) {
       showWarn(message);
     }
-    dispatch(getclear())
+    dispatch(getclear());
     if (mode === "u") {
       setFormData(data);
     }
@@ -224,9 +239,9 @@ function EnquiryForm({ mode, data }) {
             name="course"
             value={formData?.course}
             onChange={formDatahandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={course}
+            optionLabel="courseName"
+            optionValue="courseName"
             filterPlaceholder="Select a Course"
             filterInput
             filter
@@ -238,13 +253,16 @@ function EnquiryForm({ mode, data }) {
         </FloatLabel>
       </div>
       <div className="my-5">
-        <DataTable>
-          <Column field="code" header="Course types"></Column>
-          <Column field="name" header="Course Name"></Column>
-          <Column field="category" header="Certified Authority"></Column>
-          <Column field="quantity" header="Exam Fee"></Column>
-          <Column field="quantity" header="Course Fee"></Column>
-          <Column field="quantity" header="Donation"></Column>
+        <DataTable value={selectedData}>
+          <Column field="courseType" header="Course types"></Column>
+          <Column field="courseName" header="Course Name"></Column>
+          <Column
+            field="certifiedAuthority"
+            header="Certified Authority"
+          ></Column>
+          <Column field="examFee" header="Exam Fee"></Column>
+          <Column field="courseFee" header="Course Fee"></Column>
+          <Column field="courseDuration" header="Donation"></Column>
         </DataTable>
       </div>
       <div className="flex justify-center items-center gap-5 mt-5">
@@ -255,7 +273,8 @@ function EnquiryForm({ mode, data }) {
             className="border h-12 w-64"
             dateFormat="dd/mm/yy"
             name="dob"
-            value={new Date(formData?.dob)}
+            showIcon            
+            value={moment(FormData?.dob).format("DD/MM/YYYY")}
             onChange={formDatahandler}
           />
           <label htmlFor="birth_date">
@@ -266,9 +285,10 @@ function EnquiryForm({ mode, data }) {
           <Calendar
             id="enquiryDate"
             name="enquiryDate"
-            value={new Date(formData?.enquiryDate)}
+            value={moment(FormData?.enquiryDate).format("DD/MM/YYYY")}
             onChange={formDatahandler}
             inputClassName="pl-3"
+            showIcon
             className="border h-12 w-64"
           />
           <label htmlFor="fathername">Enquiry Date</label>

@@ -7,11 +7,9 @@ const axiosInstance = Axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const Ttoken = localStorage.getItem("Ttoken");
-    const Admintoken = localStorage.getItem("Admintoken");
-    const Partytoken = localStorage.getItem("partyToken");
-    if (Ttoken || Admintoken || Partytoken) {
-      config.headers.Authorization = Ttoken || Admintoken || Partytoken;
+    const usertoken = localStorage.getItem("userToken");
+    if (usertoken) {
+      config.headers.Authorization = usertoken;
     }
     return config;
   },
@@ -22,5 +20,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.defaults.headers.post["Content-Type"] = "application/json";
 axiosInstance.defaults.headers.put["Content-Type"] = "application/json";
+axiosInstance.defaults.headers.get["Content-Type"] = "application/json";
 
 export default axiosInstance;

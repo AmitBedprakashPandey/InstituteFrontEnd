@@ -5,7 +5,7 @@ import { Menubar } from "primereact/menubar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getUser, logout } from "../Redux/Slice/UserSlice";
+import { getUser, logout, getProtection } from "../Redux/Slice/UserSlice";
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,6 +20,7 @@ function NavBar() {
       navigate("/login");
     }
     dispatch(getUser());
+    // dispatch(getProtection())
   }, [navigate]);
   const accept = () => {
     dispatch(logout());

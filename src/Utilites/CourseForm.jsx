@@ -5,39 +5,32 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createCourse,
   getclear,
   updateCourse,
 } from "../Redux/Slice/CourseSlice";
-
+import { getCourseTypebyId } from "../Redux/Slice/CourseTypeSlice";
 function CourseForm({ mode, data }) {
   const [formData, setFormData] = useState();
   const dispatch = useDispatch();
   const { userid } = useSelector((state) => state.UserAuth);
+  const { CourseType } = useSelector((state) => state.CourseType);
+
+  useLayoutEffect(() => {
+    dispatch(getCourseTypebyId(userid));
+  }, [dispatch]);
 
   const formDatahandler = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
       userid: userid,
+      courseType: CourseType[0]?.coursetype,
     });
   };
-
-  const countries = [
-    { name: "Australia", code: "AU" },
-    { name: "Brazil", code: "BR" },
-    { name: "China", code: "CN" },
-    { name: "Egypt", code: "EG" },
-    { name: "France", code: "FR" },
-    { name: "Germany", code: "DE" },
-    { name: "India", code: "IN" },
-    { name: "Japan", code: "JP" },
-    { name: "Spain", code: "ES" },
-    { name: "United States", code: "US" },
-  ];
 
   useEffect(() => {
     if (mode === "u") {
@@ -84,11 +77,11 @@ function CourseForm({ mode, data }) {
           <Dropdown
             id="courseType"
             name="courseType"
-            value={formData?.courseType || countries[0]}
+            value={formData?.courseType || CourseType[0]?.coursetype}
             onChange={formDatahandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={CourseType}
+            optionLabel="coursetype"
+            optionValue="coursetype"
             filterPlaceholder="Select a Course"
             className="border w-full"
           />

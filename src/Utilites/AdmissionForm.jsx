@@ -14,6 +14,7 @@ import {
   updateAdmission
 } from "../Redux/Slice/AdmissionSlice";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment/moment";
 
 function AdmissionForm({ mode, data }) {
   const dispatch = useDispatch();
@@ -240,7 +241,7 @@ function AdmissionForm({ mode, data }) {
             name="dob"
             dateFormat="dd/mm/yy"
             placeholder="dd/mm/yy"
-            value={new Date(formData?.dob)}
+            value={moment(formData?.dob).format("DD/MM/YYYY")}
             onChange={formDataHandler}
           />
           <label htmlFor="dd-dob">

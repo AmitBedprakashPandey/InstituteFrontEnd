@@ -11,7 +11,7 @@ import HomePage from "./Components/HomePage";
 import AdminHomePage from "./Components/Admin/HomePage";
 import UserMang from "./Components/Admin/Components/UserMang";
 import FeesCollection from "./Components/Fees/FeesCollection";
-
+import PrintPage from "./Utilites/PrintPage";
 function App() {
   return (
     <>
@@ -23,6 +23,7 @@ function App() {
         <Route path="/school/course" element={<Course />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/fees/collection" element={<FeesCollection />} />
+        <Route path="/fees/print" element={<PrintPage />} />
         {/* <Route path="/admin" element={<AdminHomePage />}>
           <Route path="usermang" element={<UserMang />} />
         </Route> */}

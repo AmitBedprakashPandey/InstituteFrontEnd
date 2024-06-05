@@ -6,6 +6,7 @@ import UserSlice from "./Slice/UserSlice";
 import CourseSlice from "./Slice/CourseSlice";
 import AssignCourseSlice from "./Slice/AssignCourseSlice";
 import FeesSlice from "./Slice/FeesSlice";
+import CourseTypeSlice from "./Slice/CourseTypeSlice";
 const Store = configureStore({
   reducer: {
     Enquiry: EnquirySlice,
@@ -13,7 +14,8 @@ const Store = configureStore({
     UserAuth: UserSlice,
     Course: CourseSlice,
     AssignCourse: AssignCourseSlice,
-    Fees:FeesSlice
+    Fees:FeesSlice,
+    CourseType:CourseTypeSlice
   },
 });
 export default Store;

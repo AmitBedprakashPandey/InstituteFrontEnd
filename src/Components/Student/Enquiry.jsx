@@ -13,7 +13,7 @@ import {
   FaFileExcel,
   FaFilePdf,
   FaPenToSquare,
-  FaPlus
+  FaPlus,
 } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { getEnquirybyId, updateEnquiry } from "../../Redux/Slice/EnquirySlice";
@@ -35,7 +35,7 @@ function Enquiry(_params) {
   };
 
   useLayoutEffect(() => {
-    dispatch(getEnquirybyId(userid));    
+    dispatch(getEnquirybyId(userid));
   }, [dispatch]);
 
   const dt = useRef(null);
@@ -132,9 +132,18 @@ function Enquiry(_params) {
   const ActionbodyTemplate = (rowData) => {
     return (
       <div className="flex items-center justify-center">
-        <Button label={rowData?.status === true ?<FaEye /> :  <FaEyeSlash/>} className="p-2" onClick={() => {
-            dispatch(updateEnquiry({...rowData,status:rowData?.status === true ? false : true}))            
-          }} />
+        <Button
+          label={rowData?.status === true ? <FaEye /> : <FaEyeSlash />}
+          className="p-2"
+          onClick={() => {
+            dispatch(
+              updateEnquiry({
+                ...rowData,
+                status: rowData?.status === true ? false : true,
+              })
+            );
+          }}
+        />
         <Button
           label={<FaPenToSquare />}
           onClick={() => {
@@ -149,14 +158,20 @@ function Enquiry(_params) {
   };
   const EnquiryStatusbodyTemplate = (rowData) => {
     return (
-      <div className="flex items-center justify-center">        
+      <div className="flex items-center justify-center">
         <Button
-        
           label={rowData?.enquiryStatus === true ? "Confired" : "Panding"}
           onClick={() => {
-            dispatch(updateEnquiry({...rowData,enquiryStatus:!rowData?.enquiryStatus}))            
+            dispatch(
+              updateEnquiry({
+                ...rowData,
+                enquiryStatus: !rowData?.enquiryStatus,
+              })
+            );
           }}
-          className={`${rowData?.enquiryStatus ===true ? "bg-green-500" :"bg-red-500" } text-white p-2 px-5`}
+          className={`${
+            rowData?.enquiryStatus === true ? "bg-green-500" : "bg-red-500"
+          } text-white p-2 px-5`}
         />
       </div>
     );
@@ -166,7 +181,7 @@ function Enquiry(_params) {
   };
   return (
     <div className="relative   bg-white">
-      <NavBar />      
+      <NavBar />
       <Dialog
         header="Enquiry Form"
         position="top"

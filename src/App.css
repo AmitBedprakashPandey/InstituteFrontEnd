@@ -1,0 +1,8 @@
+@page {
+    padding: 15px;
+  }
+@media print {
+    @page {
+      padding: 15px;
+    }
+}

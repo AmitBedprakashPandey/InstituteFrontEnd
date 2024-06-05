@@ -248,11 +248,9 @@ export default function FeesCollection({ mode, data }) {
             disabled={
               formData?.date &&
               formData?.paymentMode &&
-              formData?.studentname &&
-              formData?.dueAmt &&
+              formData?.studentname &&              
               formData?.dicount &&
               formData?.paidAmt &&
-              formData?.ApayDueAmt &&
               formData?.collecteBy
                 ? false
                 : true

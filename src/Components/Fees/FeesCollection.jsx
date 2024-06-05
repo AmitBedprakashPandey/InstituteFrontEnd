@@ -136,10 +136,8 @@ export default function FeesCollection() {
             field="date"
             header="Date"
             sortable
-            body={(e) => moment(e.date).format("DD/MM/YYYY")}
-          >
-            {" "}
-          </Column>
+            body={(e) => moment(e?.date).format("DD/MM/YYYY")}
+          ></Column>
           <Column field="studentname" header="Student Name" sortable></Column>
           <Column field="paymentMode" header="Payment Mode" sortable></Column>
           <Column field="dueAmt" header="Due Amt" sortable></Column>

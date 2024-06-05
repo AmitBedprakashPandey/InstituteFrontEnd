@@ -72,7 +72,7 @@ const EnquirySlice = createSlice({
       .addCase(getEnquirybyId.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.enquiry = [action.payload];
+        state.enquiry = action.payload;
       })
       .addCase(getEnquirybyId.rejected, (state, action) => {
         state.loading = false;

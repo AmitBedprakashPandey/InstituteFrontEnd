@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const url = process.env.REACT_APP_API_URL + "/fees";
+const url = process.env.REACT_APP_API_URL + "/Gender";
 
-export const getFeesbyId = createAsyncThunk(
-  "Fees/getById",
+export const getGenderbyId = createAsyncThunk(
+  "Gender/getById",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${url}/${id}`);
@@ -15,8 +15,8 @@ export const getFeesbyId = createAsyncThunk(
     }
   }
 );
-export const createFees = createAsyncThunk(
-  "Fees/create",
+export const createGender = createAsyncThunk(
+  "Gender/create",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${url}`, data);
@@ -26,10 +26,9 @@ export const createFees = createAsyncThunk(
     }
   }
 );
-export const updateFees = createAsyncThunk(
-  "Fees/update",
+export const updateGender = createAsyncThunk(
+  "Gender/update",
   async (data, { rejectWithValue }) => {
-    
     try {
       const response = await axios.put(`${url}/${data._id}`, data);
       return response.data;
@@ -38,8 +37,8 @@ export const updateFees = createAsyncThunk(
     }
   }
 );
-export const deleteFees = createAsyncThunk(
-  "Fees/delete",
+export const deleteGender = createAsyncThunk(
+  "Gender/delete",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${id}`);
@@ -49,8 +48,8 @@ export const deleteFees = createAsyncThunk(
     }
   }
 );
-export const FeesStatus = createAsyncThunk(
-  "Fees/status",
+export const GenderStatus = createAsyncThunk(
+  "Gender/status",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${data._id}`, data);
@@ -60,10 +59,10 @@ export const FeesStatus = createAsyncThunk(
     }
   }
 );
-const FeesSlice = createSlice({
-  name: "Fees",
+const GenderSlice = createSlice({
+  name: "Gender",
   initialState: {
-    Fees: [],
+    Gender: [],
     loading: false,
     error: null,
     message: null,
@@ -76,90 +75,89 @@ const FeesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getFeesbyId.pending, (state) => {
+      .addCase(getGenderbyId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getFeesbyId.fulfilled, (state, action) => {
-        state.Fees = action.payload?.data;                
+      .addCase(getGenderbyId.fulfilled, (state, action) => {
+        state.Gender = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getFeesbyId.rejected, (state, action) => {
+      .addCase(getGenderbyId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createFees.pending, (state) => {
+      .addCase(createGender.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createFees.fulfilled, (state, action) => {
+      .addCase(createGender.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.Fees.push(action.payload.data);
-
+        state.Gender.push(action.payload.data);
         state.message = action.payload?.message;
       })
-      .addCase(createFees.rejected, (state, action) => {
+      .addCase(createGender.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateFees.pending, (state) => {
+      .addCase(updateGender.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateFees.fulfilled, (state, action) => {
-        const index = state.Fees.findIndex(
+      .addCase(updateGender.fulfilled, (state, action) => {
+        const index = state.Gender.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Fees[index] = action.payload.data;
+          state.Gender[index] = action.payload.data;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(updateFees.rejected, (state, action) => {
+      .addCase(updateGender.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteFees.pending, (state) => {
+      .addCase(deleteGender.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteFees.fulfilled, (state, action) => {
+      .addCase(deleteGender.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.Fees = state.Fees.filter(
+        state.Gender = state.Gender.filter(
           (enq) => enq._id !== action.payload.id
         );
         state.message = action.payload.message;
       })
-      .addCase(deleteFees.rejected, (state, action) => {
+      .addCase(deleteGender.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(FeesStatus.pending, (state) => {
+      .addCase(GenderStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
 
-      .addCase(FeesStatus.fulfilled, (state, action) => {
-        const index = state.Fees.findIndex(
+      .addCase(GenderStatus.fulfilled, (state, action) => {
+        const index = state.Gender.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Fees[index].status = action.payload.data.status;
+          state.Gender[index].status = action.payload.data.status;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(FeesStatus.rejected, (state, action) => {
+      .addCase(GenderStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
-export const { getclear } = FeesSlice.actions;
-export default FeesSlice.reducer;
+export const { getclear } = GenderSlice.actions;
+export default GenderSlice.reducer;
