@@ -11,6 +11,7 @@ import StateSlice from "./Slice/StateSlice";
 import GenderSlice from "./Slice/GenderSlice";
 import ReligionSlice from "./Slice/ReligionSlice";
 import FoundationSlice from "./Slice/FoundationSlice";
+import PaymentModeSlice from "./Slice/PaymentModeSlice";
 const Store = configureStore({
   reducer: {
     Enquiry: EnquirySlice,
@@ -23,7 +24,8 @@ const Store = configureStore({
     State:StateSlice,
     Gender :GenderSlice,
     Religion:ReligionSlice,
-    Foundation:FoundationSlice
+    Foundation:FoundationSlice,
+    PayementMode:PaymentModeSlice
   },
 });
 export default Store;

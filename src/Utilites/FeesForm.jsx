@@ -12,6 +12,7 @@ import { getAdmissionbyId } from "../Redux/Slice/AdmissionSlice";
 import { getAssignCoursebyId } from "../Redux/Slice/AssignCourseSlice";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
 import { createFees, updateFees } from "../Redux/Slice/FeesSlice";
+import { getPaymentModeAll } from "../Redux/Slice/PaymentModeSlice";
 export default function FeesCollection({ mode, data }) {
   const [formData, setFormData] = useState();
   const toast = useRef();
@@ -21,7 +22,7 @@ export default function FeesCollection({ mode, data }) {
   const { course } = useSelector((state) => state.Course);
   const { AssignCourse } = useSelector((state) => state.AssignCourse);
   const { userid } = useSelector((state) => state.UserAuth);
-
+  const { PaymentMode } = useSelector((state) => state.PayementMode);
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -39,6 +40,7 @@ export default function FeesCollection({ mode, data }) {
     dispatch(getAdmissionbyId(userid));
     dispatch(getAssignCoursebyId(userid));
     dispatch(getCoursebyId(userid));
+    dispatch(getPaymentModeAll());
   }, [dispatch]);
 
   const show = (message) => {
@@ -138,7 +140,7 @@ export default function FeesCollection({ mode, data }) {
             value={formData?.paymentMode}
             onChange={formDataHandler}
             className="border-slate-300 border pl-3 w-[100%]"
-            options={cities}
+            options={PaymentMode}
             optionLabel="name"
             optionValue="name"
           />

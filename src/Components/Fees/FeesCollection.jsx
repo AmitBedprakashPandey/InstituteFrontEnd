@@ -13,6 +13,7 @@ import FeesForm from "../../Utilites/FeesForm";
 import NavBar from "../NavBar";
 import { useNavigate } from "react-router-dom";
 import { getAdmissionbyId } from "../../Redux/Slice/AdmissionSlice";
+
 export default function FeesCollection() {
   const [selectedData, setSelectedData] = useState();
   const [selectedPrint, setSelectedPrint] = useState();
@@ -22,11 +23,13 @@ export default function FeesCollection() {
   const { Fees } = useSelector((state) => state.Fees);
   const { admission } = useSelector((state) => state.Admission);
   const { userid } = useSelector((state) => state.UserAuth);
+
   const dispatch = useDispatch();
   const navigate = useNavigate()
   useLayoutEffect(() => {
     dispatch(getFeesbyId(userid));
     dispatch(getAdmissionbyId(userid));
+
   }, [dispatch]);
   const dateDatahandler = (e) => {
     setDateData({ ...dateData, [e.target.name]: e.target.value });

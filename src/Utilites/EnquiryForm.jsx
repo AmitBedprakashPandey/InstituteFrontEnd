@@ -35,7 +35,6 @@ function EnquiryForm({ mode, data }) {
   const { State } = useSelector((state) => state.State);
   const { Gender } = useSelector((state) => state.Gender);
   const { Religion } = useSelector((state) => state.Religion);
-  const { foundation } = useSelector((state) => state.Foundattion);
 
   const formDatahandler = (e) => {
     setFormData({
