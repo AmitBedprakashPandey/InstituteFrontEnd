@@ -155,7 +155,7 @@ export default function FeesCollection({ mode, data }) {
             className="border-slate-300 border pl-3 w-full"
             options={admission}
             optionLabel="studentName"
-            optionValue="_id"
+            optionValue="studentName"
           />
           <label htmlFor="studentname">
             Student Name <strong className="text-red-500">*</strong>
@@ -248,7 +248,7 @@ export default function FeesCollection({ mode, data }) {
             disabled={
               formData?.date &&
               formData?.paymentMode &&
-              formData?.studentname &&              
+              formData?.studentname &&
               formData?.dicount &&
               formData?.paidAmt &&
               formData?.collecteBy

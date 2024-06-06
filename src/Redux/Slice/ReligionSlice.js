@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const url = process.env.REACT_APP_API_URL + "/gender";
+const url = process.env.REACT_APP_API_URL + "/religion";
 
-export const getGenderAll = createAsyncThunk(
-  "Gender/getById",
+export const getReligionAll = createAsyncThunk(
+  "Religion/all",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${url}`);
@@ -15,8 +15,19 @@ export const getGenderAll = createAsyncThunk(
     }
   }
 );
-export const createGender = createAsyncThunk(
-  "Gender/create",
+export const getReligionbyId = createAsyncThunk(
+  "Religion/getById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/${id}`);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data.error);
+    }
+  }
+);
+export const createReligion = createAsyncThunk(
+  "Religion/create",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${url}`, data);
@@ -26,8 +37,8 @@ export const createGender = createAsyncThunk(
     }
   }
 );
-export const updateGender = createAsyncThunk(
-  "Gender/update",
+export const updateReligion = createAsyncThunk(
+  "Religion/update",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${url}/${data._id}`, data);
@@ -37,8 +48,8 @@ export const updateGender = createAsyncThunk(
     }
   }
 );
-export const deleteGender = createAsyncThunk(
-  "Gender/delete",
+export const deleteReligion = createAsyncThunk(
+  "Religion/delete",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${id}`);
@@ -48,8 +59,8 @@ export const deleteGender = createAsyncThunk(
     }
   }
 );
-export const GenderStatus = createAsyncThunk(
-  "Gender/status",
+export const ReligionStatus = createAsyncThunk(
+  "Religion/status",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${data._id}`, data);
@@ -59,105 +70,112 @@ export const GenderStatus = createAsyncThunk(
     }
   }
 );
-const GenderSlice = createSlice({
-  name: "Gender",
+const ReligionSlice = createSlice({
+  name: "Religion",
   initialState: {
-    Gender: [],
+    Religion: [],
     loading: false,
     error: null,
     message: null,
   },
-  reducers: {
-    getclear: (state) => {
-      state.message = null;
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getGenderAll.pending, (state) => {
+      .addCase(getReligionAll.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getGenderAll.fulfilled, (state, action) => {
-        state.Gender = action.payload;
+      .addCase(getReligionAll.fulfilled, (state, action) => {
+        state.Religion = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getGenderAll.rejected, (state, action) => {
+      .addCase(getReligionAll.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createGender.pending, (state) => {
+      .addCase(getReligionbyId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createGender.fulfilled, (state, action) => {
+      .addCase(getReligionbyId.fulfilled, (state, action) => {
+        state.Religion = action.payload;
         state.loading = false;
         state.error = null;
-        state.Gender.push(action.payload.data);
+      })
+      .addCase(getReligionbyId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createReligion.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createReligion.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.Religion.push(action.payload.data);
         state.message = action.payload?.message;
       })
-      .addCase(createGender.rejected, (state, action) => {
+      .addCase(createReligion.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateGender.pending, (state) => {
+      .addCase(updateReligion.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateGender.fulfilled, (state, action) => {
-        const index = state.Gender.findIndex(
+      .addCase(updateReligion.fulfilled, (state, action) => {
+        const index = state.Religion.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Gender[index] = action.payload.data;
+          state.Religion[index] = action.payload.data;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(updateGender.rejected, (state, action) => {
+      .addCase(updateReligion.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteGender.pending, (state) => {
+      .addCase(deleteReligion.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteGender.fulfilled, (state, action) => {
+      .addCase(deleteReligion.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.Gender = state.Gender.filter(
+        state.Religion = state.Religion.filter(
           (enq) => enq._id !== action.payload.id
         );
         state.message = action.payload.message;
       })
-      .addCase(deleteGender.rejected, (state, action) => {
+      .addCase(deleteReligion.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(GenderStatus.pending, (state) => {
+      .addCase(ReligionStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
 
-      .addCase(GenderStatus.fulfilled, (state, action) => {
-        const index = state.Gender.findIndex(
+      .addCase(ReligionStatus.fulfilled, (state, action) => {
+        const index = state.Religion.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Gender[index].status = action.payload.data.status;
+          state.Religion[index].status = action.payload.data.status;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(GenderStatus.rejected, (state, action) => {
+      .addCase(ReligionStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
-export const { getclear } = GenderSlice.actions;
-export default GenderSlice.reducer;
+export default ReligionSlice.reducer;

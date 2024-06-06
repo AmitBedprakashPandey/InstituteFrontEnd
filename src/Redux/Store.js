@@ -7,6 +7,10 @@ import CourseSlice from "./Slice/CourseSlice";
 import AssignCourseSlice from "./Slice/AssignCourseSlice";
 import FeesSlice from "./Slice/FeesSlice";
 import CourseTypeSlice from "./Slice/CourseTypeSlice";
+import StateSlice from "./Slice/StateSlice";
+import GenderSlice from "./Slice/GenderSlice";
+import ReligionSlice from "./Slice/ReligionSlice";
+import FoundationSlice from "./Slice/FoundationSlice";
 const Store = configureStore({
   reducer: {
     Enquiry: EnquirySlice,
@@ -15,7 +19,11 @@ const Store = configureStore({
     Course: CourseSlice,
     AssignCourse: AssignCourseSlice,
     Fees:FeesSlice,
-    CourseType:CourseTypeSlice
+    CourseType:CourseTypeSlice,
+    State:StateSlice,
+    Gender :GenderSlice,
+    Religion:ReligionSlice,
+    Foundation:FoundationSlice
   },
 });
 export default Store;

@@ -11,16 +11,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFeesbyId } from "../../Redux/Slice/FeesSlice";
 import FeesForm from "../../Utilites/FeesForm";
 import NavBar from "../NavBar";
+import { useNavigate } from "react-router-dom";
+import { getAdmissionbyId } from "../../Redux/Slice/AdmissionSlice";
 export default function FeesCollection() {
   const [selectedData, setSelectedData] = useState();
+  const [selectedPrint, setSelectedPrint] = useState();
   const [openModel, setopenModel] = useState(false);
   const [mode, setMode] = useState("s");
   const [dateData, setDateData] = useState();
   const { Fees } = useSelector((state) => state.Fees);
+  const { admission } = useSelector((state) => state.Admission);
   const { userid } = useSelector((state) => state.UserAuth);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   useLayoutEffect(() => {
     dispatch(getFeesbyId(userid));
+    dispatch(getAdmissionbyId(userid));
   }, [dispatch]);
   const dateDatahandler = (e) => {
     setDateData({ ...dateData, [e.target.name]: e.target.value });
@@ -31,16 +37,20 @@ export default function FeesCollection() {
   const indexTemplate = (rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
+  
+  const print=(data)=>{
+    const student = admission.filter((item)=>item.studentName === data.studentname)
+    console.log(student);
+    navigate('/fees/print',{state:{student,fees:data}});
+
+  }
+
   const ActionbodyTemplate = (rowData) => {
     return (
       <div className="flex items-center justify-center gap-2">
         <Button
           label={<BiPrinter size={20} />}
-          onClick={() => {
-            setSelectedData(rowData);
-            setopenModel(true);
-            setMode("u");
-          }}
+          onClick={()=>print(rowData)}
           className="text-blue-500 p-2"
         />
 
@@ -56,6 +66,7 @@ export default function FeesCollection() {
       </div>
     );
   };
+
   return (
     <>
       <NavBar />

@@ -1,9 +1,16 @@
+import moment from "moment";
 import { Button } from "primereact/button";
 import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 
 export default function PrintPage(params) {
   const ref = useRef();
+
+  const location = useLocation()
+  const {student,fees} = location.state || {}
+
+
   const table = [
     { sr: 1, part: "Admission Fee", amt: 0 },
     { sr: 2, part: "Annual Fee", amt: 0 },
@@ -17,6 +24,8 @@ export default function PrintPage(params) {
     { sr: 10, part: "Caution Money", amt: 0 },
     { sr: 11, part: "Previous Balance", amt: 550 },
   ];
+
+console.log(fees);
 
   return (
     <>
@@ -53,18 +62,18 @@ export default function PrintPage(params) {
             </h1>
             <div className="flex justify-between w-full gap-5 px-3">
               <ul className="text-xs">
-                <li>Name:</li>
-                <li>Father:</li>
-                <li>Collected By:</li>
-                <li>Narration:</li>
-                <li>Fee Month:</li>
+                <li>Name: {student[0].studentName}</li>
+                <li>Father:{student[0].fatherName}</li>
+                <li>Collected By:{fees.collecteBy}</li>
+                <li>Narration:{fees.remark}</li>
+                <li>Fee Month:{moment(fees.date).format("MMMM-yyyy")}</li>
               </ul>
               <ul className="w-36 text-xs">
                 <li className="font-bold">Payment Id:</li>
-                <li>Date:</li>
+                <li>Date:{moment(fees.date).format("DD/MM/YYYY")}</li>
                 <li>Class:</li>
                 <li>Ledger Number:</li>
-                <li>Payment Mode:</li>
+                <li>Payment Mode:{fees.paymentMode}</li>
               </ul>
             </div>
             <div className="flex justify-center mt-3 w-full px-3">

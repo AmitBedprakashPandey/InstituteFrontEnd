@@ -20,6 +20,9 @@ import { getUser } from "../Redux/Slice/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Toast } from "primereact/toast";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
+import { getStateAll } from "../Redux/Slice/StateSlice";
+import { getGenderAll } from "../Redux/Slice/GenderSlice";
+import { getReligionAll } from "../Redux/Slice/ReligionSlice";
 import moment from "moment/moment";
 function EnquiryForm({ mode, data }) {
   const [formData, setFormData] = useState();
@@ -29,6 +32,10 @@ function EnquiryForm({ mode, data }) {
   const toast = useRef();
   const { userid } = useSelector((state) => state.UserAuth);
   const { course } = useSelector((state) => state.Course);
+  const { State } = useSelector((state) => state.State);
+  const { Gender } = useSelector((state) => state.Gender);
+  const { Religion } = useSelector((state) => state.Religion);
+  const { foundation } = useSelector((state) => state.Foundattion);
 
   const formDatahandler = (e) => {
     setFormData({
@@ -56,6 +63,9 @@ function EnquiryForm({ mode, data }) {
   }, [formData?.course]);
   useLayoutEffect(() => {
     dispatch(getCoursebyId(userid));
+    dispatch(getStateAll());
+    dispatch(getGenderAll());
+    dispatch(getReligionAll());
   }, [dispatch]);
   useEffect(() => {
     if (message) {
@@ -273,7 +283,7 @@ function EnquiryForm({ mode, data }) {
             className="border h-12 w-64"
             dateFormat="dd/mm/yy"
             name="dob"
-            showIcon            
+            showIcon
             value={moment(FormData?.dob).format("DD/MM/YYYY")}
             onChange={formDatahandler}
           />
@@ -341,9 +351,9 @@ function EnquiryForm({ mode, data }) {
             autoComplete="gender"
             value={formData?.gender}
             onChange={formDatahandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={Gender}
+            optionLabel="gender"
+            optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"
@@ -357,9 +367,9 @@ function EnquiryForm({ mode, data }) {
             autoComplete="religion"
             value={formData?.religion}
             onChange={formDatahandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={Religion}
+            optionLabel="religion"
+            optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"
@@ -415,9 +425,9 @@ function EnquiryForm({ mode, data }) {
             name="state"
             value={formData?.state}
             onChange={formDatahandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={State}
+            optionLabel="state"
+            optionValue="state"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"

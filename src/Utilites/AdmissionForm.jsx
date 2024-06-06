@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { FileUpload } from "primereact/fileupload";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
@@ -15,14 +15,20 @@ import {
 } from "../Redux/Slice/AdmissionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment/moment";
-
+import { getStateAll } from "../Redux/Slice/StateSlice";
+import { getGenderAll } from "../Redux/Slice/GenderSlice";
+import { getReligionAll } from "../Redux/Slice/ReligionSlice";
+import { getfoundationAll } from "../Redux/Slice/FoundationSlice";
 function AdmissionForm({ mode, data }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState();
 
   const { userid } = useSelector((state) => state.UserAuth);
   const { message, error, loading } = useSelector((state) => state.Admission);
-
+  const { State } = useSelector((state) => state.State);
+  const { Gender } = useSelector((state) => state.Gender);
+  const { Religion } = useSelector((state) => state.Religion);
+  const { foundation } = useSelector((state) => state.Foundation);
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -30,9 +36,13 @@ function AdmissionForm({ mode, data }) {
       userid: userid,
     });
   };
-
-  useEffect(() => {
-    
+useLayoutEffect(()=>{
+  dispatch(getStateAll());
+  dispatch(getGenderAll());
+  dispatch(getReligionAll());
+  dispatch(getfoundationAll())
+},[dispatch])
+  useEffect(() => {    
     if (mode === "u") {
       setFormData(data);
     }
@@ -241,7 +251,7 @@ function AdmissionForm({ mode, data }) {
             name="dob"
             dateFormat="dd/mm/yy"
             placeholder="dd/mm/yy"
-            value={moment(formData?.dob).format("DD/MM/YYYY")}
+            value={new Date(formData?.dob)}
             onChange={formDataHandler}
           />
           <label htmlFor="dd-dob">
@@ -321,9 +331,9 @@ function AdmissionForm({ mode, data }) {
             name="gender"
             value={formData?.gender}
             onChange={formDataHandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={Gender}
+            optionLabel="gender"
+            optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"
@@ -336,9 +346,9 @@ function AdmissionForm({ mode, data }) {
             name="religion"
             value={formData?.religion}
             onChange={formDataHandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={Religion}
+            optionLabel="religion"
+            optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"
@@ -425,9 +435,9 @@ function AdmissionForm({ mode, data }) {
             name="state"
             value={formData?.state}
             onChange={formDataHandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={State}
+            optionLabel="state"
+            optionValue="state"            
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"
@@ -452,9 +462,9 @@ function AdmissionForm({ mode, data }) {
             name="foundationCourse"
             value={formData?.foundationCourse}
             onChange={formDataHandler}
-            options={countries}
-            optionLabel="name"
-            optionValue="code"
+            options={foundation}
+            optionLabel="foundation"
+            optionValue="foundation"
             filterPlaceholder="Select a Course"
             filter
             className="border w-64"

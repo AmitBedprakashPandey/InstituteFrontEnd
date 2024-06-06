@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const url = process.env.REACT_APP_API_URL + "/gender";
+const url = process.env.REACT_APP_API_URL + "/state";
 
-export const getGenderAll = createAsyncThunk(
-  "Gender/getById",
+export const getStateAll = createAsyncThunk(
+  "State/all",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${url}`);
@@ -15,8 +15,19 @@ export const getGenderAll = createAsyncThunk(
     }
   }
 );
-export const createGender = createAsyncThunk(
-  "Gender/create",
+export const getStatebyId = createAsyncThunk(
+  "State/getById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/${id}`);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data.error);
+    }
+  }
+);
+export const createState = createAsyncThunk(
+  "State/create",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${url}`, data);
@@ -26,8 +37,8 @@ export const createGender = createAsyncThunk(
     }
   }
 );
-export const updateGender = createAsyncThunk(
-  "Gender/update",
+export const updateState = createAsyncThunk(
+  "State/update",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${url}/${data._id}`, data);
@@ -37,8 +48,8 @@ export const updateGender = createAsyncThunk(
     }
   }
 );
-export const deleteGender = createAsyncThunk(
-  "Gender/delete",
+export const deleteState = createAsyncThunk(
+  "State/delete",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${id}`);
@@ -48,8 +59,8 @@ export const deleteGender = createAsyncThunk(
     }
   }
 );
-export const GenderStatus = createAsyncThunk(
-  "Gender/status",
+export const StateStatus = createAsyncThunk(
+  "State/status",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${data._id}`, data);
@@ -59,10 +70,10 @@ export const GenderStatus = createAsyncThunk(
     }
   }
 );
-const GenderSlice = createSlice({
-  name: "Gender",
+const StateSlice = createSlice({
+  name: "State",
   initialState: {
-    Gender: [],
+    State: [],
     loading: false,
     error: null,
     message: null,
@@ -75,89 +86,102 @@ const GenderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getGenderAll.pending, (state) => {
+      .addCase(getStateAll.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getGenderAll.fulfilled, (state, action) => {
-        state.Gender = action.payload;
+      .addCase(getStateAll.fulfilled, (state, action) => {
+        state.State = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getGenderAll.rejected, (state, action) => {
+      .addCase(getStateAll.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createGender.pending, (state) => {
+      .addCase(getStatebyId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createGender.fulfilled, (state, action) => {
+      .addCase(getStatebyId.fulfilled, (state, action) => {
+        state.State = action.payload;
         state.loading = false;
         state.error = null;
-        state.Gender.push(action.payload.data);
+      })
+      .addCase(getStatebyId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(createState.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createState.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.State.push(action.payload.data);
         state.message = action.payload?.message;
       })
-      .addCase(createGender.rejected, (state, action) => {
+      .addCase(createState.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateGender.pending, (state) => {
+      .addCase(updateState.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateGender.fulfilled, (state, action) => {
-        const index = state.Gender.findIndex(
+      .addCase(updateState.fulfilled, (state, action) => {
+        const index = state.State.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Gender[index] = action.payload.data;
+          state.State[index] = action.payload.data;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(updateGender.rejected, (state, action) => {
+      .addCase(updateState.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteGender.pending, (state) => {
+      .addCase(deleteState.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteGender.fulfilled, (state, action) => {
+      .addCase(deleteState.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.Gender = state.Gender.filter(
+        state.State = state.State.filter(
           (enq) => enq._id !== action.payload.id
         );
         state.message = action.payload.message;
       })
-      .addCase(deleteGender.rejected, (state, action) => {
+      .addCase(deleteState.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(GenderStatus.pending, (state) => {
+      .addCase(StateStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
 
-      .addCase(GenderStatus.fulfilled, (state, action) => {
-        const index = state.Gender.findIndex(
+      .addCase(StateStatus.fulfilled, (state, action) => {
+        const index = state.State.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.Gender[index].status = action.payload.data.status;
+          state.State[index].status = action.payload.data.status;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(GenderStatus.rejected, (state, action) => {
+      .addCase(StateStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
-export const { getclear } = GenderSlice.actions;
-export default GenderSlice.reducer;
+export const { getclear } = StateSlice.actions;
+export default StateSlice.reducer;

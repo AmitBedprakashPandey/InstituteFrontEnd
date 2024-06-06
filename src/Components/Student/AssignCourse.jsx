@@ -6,11 +6,8 @@ import { Column } from "primereact/column";
 import {
   FaFilePdf,
   FaFileExcel,
-  FaFileCsv,
-  FaEye,
-  FaPenToSquare,
-  FaPlus,
-  FaTrash,
+  FaFileCsv, FaPlus,
+  FaTrash
 } from "react-icons/fa6";
 import { Dropdown } from "primereact/dropdown";
 import NewCourseForm from "../../Utilites/AssignCourseForm";
@@ -25,7 +22,7 @@ import {
 } from "../../Redux/Slice/AssignCourseSlice";
 import { Toast } from "primereact/toast";
 
-function AssignCourse(params) {
+function AssignCourse(_params) {
   const [openModel, setOpenModel] = useState(false);
   const [mode, setMode] = useState("s");
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -36,7 +33,7 @@ function AssignCourse(params) {
   const { AssignCourse, message, error, loading } = useSelector(
     (state) => state.AssignCourse
   );
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState([]);
   const dispatch = useDispatch();
   const toast = useRef();
 
@@ -47,15 +44,13 @@ function AssignCourse(params) {
   }, [dispatch, userid]);
 
   useEffect(() => {
-    for (let index = 0; index < AssignCourse.length; index++) {
-      const student = admission.filter(
-        (item) => item._id === AssignCourse[0].studentId
-      );
-      const Courses = course.filter(
-        (item) => item._id === AssignCourse[0].courseId
-      );
-      setFormData({ ...formData, student });
-    }
+    const newFormData = AssignCourse.map((assign) => {
+      const student = admission.find((item) => item._id === assign.studentId);
+      const Courses = course.find((item) => item._id === assign.courseId);
+      return { ...student, Courses };
+    });
+
+    setFormData(newFormData);
   }, [AssignCourse, admission, course]);
 
   const show = (message) => {
@@ -176,9 +171,10 @@ function AssignCourse(params) {
     );
   };
 
-  const indexTemplate = (rowData, { rowIndex }) => {
+  const indexTemplate = (_rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
+
 
   return (
     <div className="relative">
@@ -253,7 +249,7 @@ function AssignCourse(params) {
       </div>
       <div className="shadow-md m-4 border-t-4 rounded-lg border-blue-500">
         <DataTable
-          value={AssignCourse}
+          value={formData}
           size="small"
           showGridlines
           stripedRows
@@ -269,55 +265,55 @@ function AssignCourse(params) {
             sortable
           ></Column>
           <Column
-            field="student.studentName"
+            field="studentName"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Student Name"
             sortable
           ></Column>
           <Column
-            field="student.fatherName"
+            field="fatherName"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Father Name"
             sortable
           ></Column>
           <Column
-            field="student.studentId"
+            field="studentId"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Student Id"
             sortable
           ></Column>
           <Column
-            field="course.courseType"
+            field="Courses.courseType"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Course Type"
             sortable
           ></Column>
           <Column
-            field="course.courseName"
+            field="Courses.courseName"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Course Name"
             sortable
           ></Column>
           <Column
-            field="course.courseCode"
+            field="Courses.courseCode"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Course Code"
             sortable
           ></Column>
           <Column
-            field="course.examFee"
+            field="Courses.examFee"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Exam Fee"
             sortable
           ></Column>
           <Column
-            field="course.courseFee"
+            field="Courses.courseFee"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Course Fee"
             sortable
           ></Column>
           <Column
-            field="course.courseDuration"
+            field="Courses.courseDuration"
             headerClassName="p-3 border-black border  bg-slate-200"
             header="Duration"
             sortable
