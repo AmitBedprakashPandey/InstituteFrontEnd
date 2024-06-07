@@ -22,8 +22,8 @@ function App() {
         <Route path="/school/assigncourse" element={<AssignCourse />} />
         <Route path="/school/course" element={<Course />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/fees/collection" element={<FeesCollection />} />
-        <Route path="/fees/print" element={<PrintPage />} />
+        <Route path="/account/collection" element={<FeesCollection />} />
+        <Route path="/account/print" element={<PrintPage />} />
         {/* <Route path="/admin" element={<AdminHomePage />}>
           <Route path="usermang" element={<UserMang />} />
         </Route> */}

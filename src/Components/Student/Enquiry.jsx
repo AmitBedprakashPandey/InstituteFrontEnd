@@ -6,12 +6,15 @@ import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Image } from "primereact/image";
 import { useLayoutEffect, useRef, useState } from "react";
+import { FaRedo } from "react-icons/fa";
 import {
   FaEye,
   FaEyeSlash,
   FaFileCsv,
   FaFileExcel,
   FaFilePdf,
+  FaFilter,
+  FaImage,
   FaPenToSquare,
   FaPlus,
 } from "react-icons/fa6";
@@ -22,12 +25,11 @@ import NavBar from "../NavBar";
 
 function Enquiry(_params) {
   const [openModel, setOpenModel] = useState(false);
-  const [openModel2, setOpenModel2] = useState(false);
   const [selectedData, setSelectedData] = useState();
 
   const [mode, setMode] = useState("s");
   const [dateData, setDateData] = useState({ fromDate: null, endDate: null });
-  const { enquiry, loading } = useSelector((state) => state.Enquiry);
+  const { enquiry } = useSelector((state) => state.Enquiry);
   const { userid } = useSelector((state) => state.UserAuth);
   const dispatch = useDispatch();
   const dateDatahandler = (e) => {
@@ -133,7 +135,13 @@ function Enquiry(_params) {
     return (
       <div className="flex items-center justify-center">
         <Button
-          label={rowData?.status === true ? <FaEye /> : <FaEyeSlash />}
+          label={
+            rowData?.status === true ? (
+              <FaEye size={25} />
+            ) : (
+              <FaEyeSlash size={25} />
+            )
+          }
           className="p-2"
           onClick={() => {
             dispatch(
@@ -145,7 +153,7 @@ function Enquiry(_params) {
           }}
         />
         <Button
-          label={<FaPenToSquare />}
+          label={<FaPenToSquare size={20} />}
           onClick={() => {
             setSelectedData(rowData);
             setOpenModel(true);
@@ -170,8 +178,10 @@ function Enquiry(_params) {
             );
           }}
           className={`${
-            rowData?.enquiryStatus === true ? "bg-green-500" : "bg-red-500"
-          } text-white p-2 px-5`}
+            rowData?.enquiryStatus === true
+              ? "bg-green-500 hover:bg-green-600"
+              : "bg-red-500 hover:bg-red-600"
+          } text-white py-2 px-5 md:py-1 md:px-3  duration-200 `}
         />
       </div>
     );
@@ -179,8 +189,24 @@ function Enquiry(_params) {
   const indexTemplate = (_rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
+
+  const imageTemplate = (rowData) => {
+    return (
+      <>
+        {rowData?.studentPhoto ? (
+          <div className="w-12 h-12 overflow-hidden">
+            <Image src={rowData?.studentPhoto} preview />
+          </div>
+        ) : (
+          <div className="w-12 h-12  flex justify-center items-center overflow-hidden">
+            <FaImage size={60} color="red" />
+          </div>
+        )}
+      </>
+    );
+  };
   return (
-    <div className="relative   bg-white">
+    <div className="relative">
       <NavBar />
       <Dialog
         header="Enquiry Form"
@@ -191,7 +217,7 @@ function Enquiry(_params) {
       >
         <EnquiryForm mode={mode} data={selectedData} />
       </Dialog>
-      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-md">
+      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
         <div className="flex justify-between">
           <strong className="">Register Enquries</strong>
           <div>
@@ -237,27 +263,30 @@ function Enquiry(_params) {
 
           <div className="flex gap-2 mt-5">
             <Button
-              label="Filter"
               disabled={
                 dateData.fromDate !== null && dateData.endDate !== null
                   ? false
                   : true
               }
               onClick={dateFilterhandler}
-              className="bg-blue-500 text-white p-3"
-            />
+              className="capitalize flex gap-3 bg-blue-500 hover:bg-blue-600 duration-200 text-white p-3"
+            >
+              <FaFilter /> filter
+            </Button>
             <Button
-              label="Clear"
               onClick={() => setDateData({ fromDate: null, endDate: null })}
-              className="bg-red-500 text-white p-3"
-            />
+              className="flex gap-3 bg-red-500 hover:bg-red-600 duration-200 text-white p-3"
+            >
+              <FaRedo /> Clear
+            </Button>
           </div>
         </div>
       </div>
-      <div className="border-t-4 rounded-lg border-blue-500 shadow-md m-4">
+      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
         <DataTable
           value={enquiry}
           size="small"
+          rows={10}
           showGridlines
           stripedRows
           header={header}
@@ -265,77 +294,79 @@ function Enquiry(_params) {
         >
           <Column
             field="code"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            bodyClassName="flex justify-center pt-7"
             header="Sr."
             body={indexTemplate}
             sortable
           ></Column>
           <Column
             field="studentPhoto"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-2 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
             header="Photo"
-            body={(e) => (
-              <Image
-                src={e?.studentPhoto}
-                className="w-14 h-14 overflow-hidden"
-                preview
-              />
-            )}
+            body={imageTemplate}
             sortable
           ></Column>
           <Column
             field="studentName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
             header="Student Name"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="fatherName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3  md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Father Name"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="course"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             header="Course"
             sortable
           ></Column>
           <Column
             field="email"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Email"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="mobileNo"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Mobile No."
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="enquiryDate"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Enquiry Date"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             body={(e) => moment(e).format("DD/MM/YYYY")}
             sortable
           ></Column>
           <Column
             field="enquiryBy"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Enquiry By"
+            bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="status"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Enquiry Status"
             sortable
             body={EnquiryStatusbodyTemplate}
           ></Column>
           <Column
             field="quantity"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
             header="Action"
             body={ActionbodyTemplate}
             sortable

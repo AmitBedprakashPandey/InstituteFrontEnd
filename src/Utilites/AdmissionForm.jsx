@@ -14,17 +14,16 @@ import {
   updateAdmission
 } from "../Redux/Slice/AdmissionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment/moment";
 import { getStateAll } from "../Redux/Slice/StateSlice";
 import { getGenderAll } from "../Redux/Slice/GenderSlice";
 import { getReligionAll } from "../Redux/Slice/ReligionSlice";
 import { getfoundationAll } from "../Redux/Slice/FoundationSlice";
+import { BiSave, BiUpload } from "react-icons/bi";
 function AdmissionForm({ mode, data }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState();
 
   const { userid } = useSelector((state) => state.UserAuth);
-  const { message, error, loading } = useSelector((state) => state.Admission);
   const { State } = useSelector((state) => state.State);
   const { Gender } = useSelector((state) => state.Gender);
   const { Religion } = useSelector((state) => state.Religion);
@@ -212,7 +211,7 @@ useLayoutEffect(()=>{
         <FloatLabel>
           <InputText
             id="StudentName"
-            className="border h-12 pl-3 w-64"
+            className="border border-slate-400 h-12 pl-3 w-64"
             name="studentName"
             value={formData?.studentName}
             onChange={formDataHandler}
@@ -224,7 +223,7 @@ useLayoutEffect(()=>{
         <FloatLabel>
           <InputText
             id="fathername"
-            className="border h-12 pl-3 w-64"
+            className="border border-slate-400 h-12 pl-3 w-64"
             name="fatherName"
             value={formData?.fatherName}
             onChange={formDataHandler}
@@ -236,7 +235,7 @@ useLayoutEffect(()=>{
         <FloatLabel>
           <InputText
             id="mothername"
-            className="border h-12 pl-3 w-64"
+            className="border border-slate-400 h-12 pl-3 w-64"
             name="motherName"
             value={formData?.motherName}
             onChange={formDataHandler}
@@ -246,7 +245,7 @@ useLayoutEffect(()=>{
         <FloatLabel>
           <Calendar
             inputId="dd-dob"
-            className="border w-64 h-12 rounded-md"
+            className="border border-slate-400 w-64 h-12 rounded-md"
             inputClassName="pl-3"
             name="dob"
             dateFormat="dd/mm/yy"
@@ -264,7 +263,7 @@ useLayoutEffect(()=>{
           <Calendar
             inputId="regdate"
             inputClassName="pl-3 "
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md  h-12 w-64"
             dateFormat="dd/mm/yy"
             placeholder="dd/mm/yy"
             name="regdDate"
@@ -284,7 +283,7 @@ useLayoutEffect(()=>{
             name="mobileNo"
             value={formData?.mobileNo}
             onChange={(e) => formDataHandler(e.originalEvent)}
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md h-12 w-64"
           />
           <label for="mobileNo">
             Mobile No. <span className="text-red-500">*</span>
@@ -299,14 +298,14 @@ useLayoutEffect(()=>{
             name="altMobileNo"
             value={formData?.altMobileNo}
             onChange={(e) => formDataHandler(e.originalEvent)}
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md h-12 w-64"
           />
           <label for="altMobileNo">Alternate Mobile No. </label>
         </FloatLabel>
         <FloatLabel>
           <InputText
             id="email"
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             name="email"
             value={formData?.email}
             onChange={formDataHandler}
@@ -318,7 +317,7 @@ useLayoutEffect(()=>{
         <FloatLabel>
           <InputText
             id="bloodGroup"
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             name="bloodGroup"
             value={formData?.bloodGroup}
             onChange={formDataHandler}
@@ -336,7 +335,7 @@ useLayoutEffect(()=>{
             optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border border-slate-400 w-64"
           />
           <label htmlFor="gender">Gender</label>
         </FloatLabel>
@@ -351,13 +350,13 @@ useLayoutEffect(()=>{
             optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border border-slate-400 w-64"
           />
           <label htmlFor="fathername">Religion</label>
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="studentAadharNo"
             name="studentAadharNo"
             value={formData?.studentAadharNo}
@@ -369,7 +368,7 @@ useLayoutEffect(()=>{
       <div className="flex justify-center items-center gap-5 mt-7">
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="studentQualification"
             name="studentQualification"
             value={formData?.studentQualification}
@@ -379,7 +378,7 @@ useLayoutEffect(()=>{
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="nationality"
             name="nationality"
             value={formData?.nationality}
@@ -389,7 +388,7 @@ useLayoutEffect(()=>{
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="caste"
             name="caste"
             value={formData?.caste}
@@ -399,7 +398,7 @@ useLayoutEffect(()=>{
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="address1"
             name="address1"
             value={formData?.address1}
@@ -411,7 +410,7 @@ useLayoutEffect(()=>{
       <div className="flex justify-start items-center gap-5 mt-7">
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="address2"
             name="address2"
             value={formData?.address2}
@@ -421,7 +420,7 @@ useLayoutEffect(()=>{
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             id="city"
             name="city"
             value={formData?.city}
@@ -440,14 +439,14 @@ useLayoutEffect(()=>{
             optionValue="state"            
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border border-slate-400 w-64"
           />
           <label htmlFor="state">State</label>
         </FloatLabel>
         <FloatLabel>
           <InputText
             id="examCenter"
-            className="border h-12 w-64 pl-3"
+            className="border border-slate-400 h-12 w-64 pl-3"
             name="examCenter"
             value={formData?.examCenter}
             onChange={formDataHandler}
@@ -467,13 +466,13 @@ useLayoutEffect(()=>{
             optionValue="foundation"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border border-slate-400 w-64"
           />
           <label htmlFor="foundationCourse">Foundation Course</label>
         </FloatLabel>
       </div>
       <div className="flex flex-col items-center gap-5 mt-7">
-        <div className="grid grid-cols-4 g gap-3">
+        <div className="grid lg:grid-cols-8 md:grid-cols-4 g gap-3">
           <span>
             <label htmlFor="StudentName">Student Photo</label>
             <FileUpload
@@ -481,11 +480,11 @@ useLayoutEffect(()=>{
               onSelect={studentImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className="h-12"
             />
             <Image
               src={formData?.studentPhoto}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -496,11 +495,11 @@ useLayoutEffect(()=>{
               onSelect={fatherImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.fatherPhoto}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -515,7 +514,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.motherPhoto}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -530,7 +529,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.certificate}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -546,7 +545,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.certificate1}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -561,7 +560,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.certificate2}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -576,7 +575,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.certificate3}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -591,7 +590,7 @@ useLayoutEffect(()=>{
             />
             <Image
               src={formData?.certificate4}
-              className="w-16 h-16 mt-3 border overflow-hidden"
+              className="w-16 h-16 mt-3 border border-slate-400 overflow-hidden"
               preview
             />
           </span>
@@ -611,13 +610,15 @@ useLayoutEffect(()=>{
             }
             onClick={confirm1}
             label="Save"
-            className="bg-green-500 w-36 text-white p-3"
+            icon={<BiSave size={20} />}
+            className="bg-green-500 hover:bg-green-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         ) : (
           <Button
             onClick={confirm2}
             label="Update"
-            className="bg-blue-500 w-36 text-white p-3"
+            icon={<BiUpload size={20} />}
+            className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         )}
       </div>

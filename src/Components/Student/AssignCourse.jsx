@@ -6,9 +6,13 @@ import { Column } from "primereact/column";
 import {
   FaFilePdf,
   FaFileExcel,
-  FaFileCsv, FaPlus,
-  FaTrash
+  FaFileCsv,
+  FaPlus,
+  FaTrash,
+  FaFilter,
+  FaImage,
 } from "react-icons/fa6";
+import { FaRedo } from "react-icons/fa";
 import { Dropdown } from "primereact/dropdown";
 import NewCourseForm from "../../Utilites/AssignCourseForm";
 import { FloatLabel } from "primereact/floatlabel";
@@ -164,7 +168,7 @@ function AssignCourse(_params) {
       <div className="flex items-center justify-center">
         <Button
           onClick={() => dispatch(deleteAssignCourse(rowData._id))}
-          label={<FaTrash />}
+          label={<FaTrash size={20}/>}
           className="text-blue-500 p-2"
         />
       </div>
@@ -174,7 +178,6 @@ function AssignCourse(_params) {
   const indexTemplate = (_rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
-
 
   return (
     <div className="relative">
@@ -189,20 +192,20 @@ function AssignCourse(_params) {
       >
         <NewCourseForm mode={"s"} />
       </Dialog>
-      <div className="p-3 m-4 border-4  rounded-lg border-blue-500 shadow-md">
+      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
         <div className="flex justify-between">
-          <strong className="">Filter Records</strong>
+          <strong className="md:text-md lg:text-lg">Filter Records</strong>
           <Button
             label="Assign New Course"
             icon={<FaPlus />}
-            className="text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+            className="text-sm p-3 flex gap-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
             onClick={() => {
               setMode("s");
               setOpenModel(true);
             }}
           />
         </div>
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="w-7/12 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <div className="">
             <FloatLabel>
               <Dropdown
@@ -220,7 +223,7 @@ function AssignCourse(_params) {
             </FloatLabel>
           </div>
 
-          <div className="">
+          <div className="sm:mt-2 md:mt-0">
             <FloatLabel>
               <Dropdown
                 value={selectedCourse}
@@ -238,16 +241,17 @@ function AssignCourse(_params) {
             </FloatLabel>
           </div>
 
-          <div className="flex gap-2 ">
+          <div className="flex gap-2 sm:mt-2 md:mt-0">
             <Button
               label="Filter"
-              className="bg-blue-500 text-white px-3 py-2"
+              icon={<FaFilter size={20}/>}
+              className="flex gap-3 bg-blue-500 text-white px-3 py-2"
             />
-            <Button label="Clear" className="bg-red-500 text-white px-3 py-2" />
+            <Button label="Clear" icon={<FaRedo size={20} />} className="flex gap-3 bg-red-500 text-white px-3 py-2" />
           </div>
         </div>
       </div>
-      <div className="shadow-md m-4 border-t-4 rounded-lg border-blue-500">
+      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
         <DataTable
           value={formData}
           size="small"
@@ -258,7 +262,7 @@ function AssignCourse(_params) {
         >
           <Column
             field="code"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             bodyClassName="flex justify-center"
             header="Sr."
             body={indexTemplate}
@@ -266,61 +270,61 @@ function AssignCourse(_params) {
           ></Column>
           <Column
             field="studentName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Student Name"
             sortable
           ></Column>
           <Column
             field="fatherName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Father Name"
             sortable
           ></Column>
           <Column
             field="studentId"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Student Id"
             sortable
           ></Column>
           <Column
             field="Courses.courseType"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Course Type"
             sortable
           ></Column>
           <Column
             field="Courses.courseName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Course Name"
             sortable
           ></Column>
           <Column
             field="Courses.courseCode"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Course Code"
             sortable
           ></Column>
           <Column
             field="Courses.examFee"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Exam Fee"
             sortable
           ></Column>
           <Column
             field="Courses.courseFee"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Course Fee"
             sortable
           ></Column>
           <Column
             field="Courses.courseDuration"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Duration"
             sortable
           ></Column>
           <Column
             field="quantity"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Action"
             body={ActionbodyTemplate}
             sortable

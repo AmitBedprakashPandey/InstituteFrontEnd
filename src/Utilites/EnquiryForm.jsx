@@ -13,16 +13,15 @@ import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
 import {
   createEnquiry,
-  getclear,
   updateEnquiry,
 } from "../Redux/Slice/EnquirySlice";
-import { getUser } from "../Redux/Slice/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Toast } from "primereact/toast";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
 import { getStateAll } from "../Redux/Slice/StateSlice";
 import { getGenderAll } from "../Redux/Slice/GenderSlice";
 import { getReligionAll } from "../Redux/Slice/ReligionSlice";
+import { BiSave,BiUpload } from "react-icons/bi";
 import moment from "moment/moment";
 function EnquiryForm({ mode, data }) {
   const [formData, setFormData] = useState();
@@ -59,13 +58,13 @@ function EnquiryForm({ mode, data }) {
     setSelectedData(
       course.filter((item) => item.courseName === formData?.course)
     );
-  }, [formData?.course]);
+  }, [formData?.course,course]);
   useLayoutEffect(() => {
     dispatch(getCoursebyId(userid));
     dispatch(getStateAll());
     dispatch(getGenderAll());
     dispatch(getReligionAll());
-  }, [dispatch]);
+  }, [dispatch,userid]);
   useEffect(() => {
     if (message) {
       show(message);
@@ -73,11 +72,10 @@ function EnquiryForm({ mode, data }) {
     if (error) {
       showWarn(message);
     }
-    dispatch(getclear());
     if (mode === "u") {
       setFormData(data);
     }
-  }, [message, error, data]);
+  }, [message, error, data,mode]);
 
   const handleImageUpload = (event) => {
     return new Promise((resolve, reject) => {
@@ -158,19 +156,6 @@ function EnquiryForm({ mode, data }) {
     }
   };
 
-  const countries = [
-    { name: "Australia", code: "AU" },
-    { name: "Brazil", code: "BR" },
-    { name: "China", code: "CN" },
-    { name: "Egypt", code: "EG" },
-    { name: "France", code: "FR" },
-    { name: "Germany", code: "DE" },
-    { name: "India", code: "IN" },
-    { name: "Japan", code: "JP" },
-    { name: "Spain", code: "ES" },
-    { name: "United States", code: "US" },
-  ];
-
   const onSave = () => {
     dispatch(createEnquiry(formData));
   };
@@ -214,7 +199,8 @@ function EnquiryForm({ mode, data }) {
             name="studentName"
             value={formData?.studentName}
             onChange={formDatahandler}
-            className="border h-12 pl-3 w-64"
+            autoFocus
+            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
           />
           <label htmlFor="StudentName">
             Student Name <span className="text-red-500">*</span>
@@ -227,7 +213,7 @@ function EnquiryForm({ mode, data }) {
             value={formData?.fatherName}
             onChange={formDatahandler}
             fatherName
-            className="border h-12 pl-3 w-64"
+            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
           />
           <label htmlFor="fatherName">
             Father Name <span className="text-red-500">*</span>
@@ -237,9 +223,10 @@ function EnquiryForm({ mode, data }) {
           <InputText
             id="mothername"
             name="motherName"
+            autoComplete="motheer name"
             value={formData?.motherName}
             onChange={formDatahandler}
-            className="border h-12 pl-3 w-64"
+            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
           />
           <label for="mothername">Mother Name</label>
         </FloatLabel>
@@ -254,32 +241,64 @@ function EnquiryForm({ mode, data }) {
             filterPlaceholder="Select a Course"
             filterInput
             filter
-            className="border w-64"
+            className="border border-slate-400 w-64 md:h-10 h-12"
           />
           <label htmlFor="dd-city">
             Select a Course <span className="text-red-500">*</span>
           </label>
         </FloatLabel>
       </div>
-      <div className="my-5">
-        <DataTable value={selectedData}>
-          <Column field="courseType" header="Course types"></Column>
-          <Column field="courseName" header="Course Name"></Column>
+      <div className="py-3">
+        <DataTable
+          value={selectedData}
+          className="border shadow-gray-500 shadow-sm"
+          stripedRows
+          showGridlines
+        >
+          <Column
+            field="courseType"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course types"
+          ></Column>
+          <Column
+            field="courseName"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course Name"
+          ></Column>
           <Column
             field="certifiedAuthority"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
             header="Certified Authority"
           ></Column>
-          <Column field="examFee" header="Exam Fee"></Column>
-          <Column field="courseFee" header="Course Fee"></Column>
-          <Column field="courseDuration" header="Donation"></Column>
+          <Column
+            field="examFee"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Exam Fee"
+          ></Column>
+          <Column
+            field="courseFee"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course Fee"
+          ></Column>
+          <Column
+            field="courseDuration"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Donation"
+          ></Column>
         </DataTable>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="flex justify-center items-center gap-5 lg:mt-5 md:mt-5">
         <FloatLabel>
           <Calendar
             id="birth_date"
             inputClassName="pl-3 "
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
             dateFormat="dd/mm/yy"
             name="dob"
             showIcon
@@ -298,7 +317,7 @@ function EnquiryForm({ mode, data }) {
             onChange={formDatahandler}
             inputClassName="pl-3"
             showIcon
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
           />
           <label htmlFor="fathername">Enquiry Date</label>
         </FloatLabel>
@@ -311,7 +330,7 @@ function EnquiryForm({ mode, data }) {
             onChange={(e) => formDatahandler(e.originalEvent)}
             maxLength={10}
             inputClassName="pl-3"
-            className="border h-12 w-64"
+            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
           />
           <label for="mobileNo">
             Mobile No. <span className="text-red-500">*</span>
@@ -326,16 +345,16 @@ function EnquiryForm({ mode, data }) {
             useGrouping={false}
             maxLength={10}
             inputClassName="pl-3"
-            className="border h-12 w-64"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64"
           />
           <label for="altMobile">Alternate Mobile No. </label>
         </FloatLabel>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="flex justify-center items-center gap-5 lg:mt-7 md:mt-5">
         <FloatLabel>
           <InputText
             id="email"
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
             name="email"
             autoComplete="email"
             value={formData?.email}
@@ -355,7 +374,7 @@ function EnquiryForm({ mode, data }) {
             optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
           />
           <label htmlFor="gender">Gender</label>
         </FloatLabel>
@@ -371,13 +390,13 @@ function EnquiryForm({ mode, data }) {
             optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
           />
           <label htmlFor="religion">Religion</label>
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
             id="caste"
             name="caste"
             autoComplete="caste"
@@ -387,14 +406,14 @@ function EnquiryForm({ mode, data }) {
           <label htmlFor="caste">Caste</label>
         </FloatLabel>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="flex justify-center items-center gap-5 lg:mt-7 md:mt-5">
         <FloatLabel>
           <InputText
             id="address1"
             name="address1"
             value={formData?.address1}
             onChange={formDatahandler}
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
           />
           <label htmlFor="address1">Address-1</label>
         </FloatLabel>
@@ -404,7 +423,7 @@ function EnquiryForm({ mode, data }) {
             name="address2"
             value={formData?.address2}
             onChange={formDatahandler}
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
           />
           <label htmlFor="address2">Address-2</label>
         </FloatLabel>
@@ -414,7 +433,7 @@ function EnquiryForm({ mode, data }) {
             name="city"
             value={formData?.city}
             onChange={formDatahandler}
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
           />
           <label for="mothername">City</label>
         </FloatLabel>
@@ -429,19 +448,19 @@ function EnquiryForm({ mode, data }) {
             optionValue="state"
             filterPlaceholder="Select a Course"
             filter
-            className="border w-64"
+            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
           />
           <label htmlFor="state">State</label>
         </FloatLabel>
       </div>
-      <div className="flex justify-start items-center gap-5 mt-5">
+      <div className="flex justify-start items-center gap-5 lg:mt-7 md:mt-5">
         <FloatLabel>
           <InputText
             id="enquiryBy"
             name="enquiryBy"
             value={formData?.enquiryBy}
             onChange={formDatahandler}
-            className="border h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
           />
           <label htmlFor="enquiryBy">EnquiryBy</label>
         </FloatLabel>
@@ -454,11 +473,12 @@ function EnquiryForm({ mode, data }) {
             accept="image/*"
             id="StudentName"
             onSelect={studentImageHandler}
-            className="border h-12"
+            className="border md:h-10 h-12"
           />
+
           <Image
             src={formData?.studentPhoto}
-            className="w-16 h-16 mt-3 border overflow-hidden"
+            className="w-16 h-16 mt-3 border rounded-md border-slate-400 overflow-hidden"
             preview
           />
         </span>
@@ -469,11 +489,11 @@ function EnquiryForm({ mode, data }) {
             onSelect={fatherImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border h-12"
+            className="border rounded-md border-slate-400 md:h-10 h-12"
           />
           <Image
             src={formData?.fatherPhoto}
-            className="w-16 h-16 mt-3 border overflow-hidden"
+            className="w-16 h-16 mt-3 border rounded-md border-slate-400 overflow-hidden"
             preview
           />
         </span>
@@ -484,11 +504,11 @@ function EnquiryForm({ mode, data }) {
             onSelect={motherImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border h-12"
+            className="border md:h-10 h-12"
           />
           <Image
             src={formData?.motherPhoto}
-            className="w-16 h-16 mt-3 border overflow-hidden"
+            className="w-16 h-16 mt-3 border rounded-md border-slate-400 overflow-hidden"
             preview
           />
         </span>
@@ -499,11 +519,11 @@ function EnquiryForm({ mode, data }) {
             onSelect={certidicateImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border h-12"
+            className="border md:h-10 h-12"
           />
           <Image
             src={formData?.certificate}
-            className="w-16 h-16 mt-3 border overflow-hidden"
+            className="w-16 h-16 mt-3 border rounded-md border-slate-400 overflow-hidden"
             preview
           />
         </span>
@@ -522,13 +542,14 @@ function EnquiryForm({ mode, data }) {
                 : true
             }
             label="Save"
-            className="bg-green-500 w-36 text-white p-3"
+              icon={<BiSave size={20} />}
+            className="bg-green-500 hover:bg-green-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         ) : (
           <Button
             onClick={confirm2}
-            label="Update"
-            className="bg-blue-500 w-36 text-white p-3"
+             icon={<BiUpload size={20} />}
+            className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         )}
       </div>

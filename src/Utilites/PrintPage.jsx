@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ReactToPrint from "react-to-print";
-
+import {BiPrinter} from 'react-icons/bi';
 export default function PrintPage(params) {
   const ref = useRef();
 
@@ -33,15 +33,16 @@ console.log(fees);
         trigger={() => (
           <Button
             label="Print"
-            className="bg-blue-500 px-10 py-3 text-white m-3 print:hidden"
+            icon={<BiPrinter size={20}/> }
+            className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 px-10 py-3 text-white m-3 print:hidden"
           />
         )}
         content={() => ref.current}
       />
 
       <div ref={ref} className="flex justify-center">
-        <div className="flex gap-3 print:scale-95">
-          <div className="w-[400px] h-[800px] mt-5 shadow-slate-800 print:shadow-none shadow flex flex-col items-center">
+        <div className="flex print:scale-95 bg-white">
+          <div className="w-[400px] h-[800px] shadow-slate-800 print:shadow-none shadow flex flex-col items-center">
             <h1 className="text-3xl font-black uppercase mt-4">
               abcd public school
             </h1>
@@ -163,7 +164,8 @@ console.log(fees);
             <p className="text-xs mt-1">This Is Computer Generated Hence Signature Is Not Required.
 </p>
           </div>
-          <div className="w-[400px] h-[800px] mt-5 shadow-slate-800 print:shadow-none shadow flex flex-col items-center">
+          <div className="p-0 m-0 border border-black border-dashed mx-2"/>
+          <div className="w-[400px] h-[800px]  shadow-slate-800 print:shadow-none shadow flex flex-col items-center">
             <h1 className="text-3xl font-black uppercase mt-4">
               abcd public school
             </h1>

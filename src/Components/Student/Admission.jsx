@@ -8,14 +8,16 @@ import { Column } from "primereact/column";
 import {
   FaFilePdf,
   FaFileExcel,
-  FaFileCsv, FaPenToSquare,
-  FaPlus
+  FaFileCsv,
+  FaPenToSquare,
+  FaPlus,
+  FaFilter,
+  FaImage,
 } from "react-icons/fa6";
+import { FaRedo } from "react-icons/fa";
 import AdmissionForm from "../../Utilites/AdmissionForm";
 import EnquiryForm from "../../Utilites/EnquiryForm";
-import {
-  getAdmissionbyId
-} from "../../Redux/Slice/AdmissionSlice";
+import { getAdmissionbyId } from "../../Redux/Slice/AdmissionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import NavBar from "../NavBar";
 import { Image } from "primereact/image";
@@ -29,7 +31,9 @@ function Admission(_params) {
   const [mode, setMode] = useState("s");
   const dispatch = useDispatch();
   const toast = useRef();
-  const { admission, loading,message,error } = useSelector((state) => state.Admission);
+  const { admission, loading, message, error } = useSelector(
+    (state) => state.Admission
+  );
   const { user, userid } = useSelector((state) => state.UserAuth);
   const dt = useRef(null);
   const products = [];
@@ -146,9 +150,9 @@ function Admission(_params) {
 
   const ActionbodyTemplate = (rowData) => {
     return (
-      <div className="flex items-center justify-center">        
+      <div className="flex items-center justify-center">
         <Button
-          label={<FaPenToSquare />}
+          label={<FaPenToSquare size={20} />}
           onClick={() => {
             setSelectedData(rowData);
             setOpenModel(true);
@@ -164,9 +168,17 @@ function Admission(_params) {
   };
   const imageTemplate = (rowData, { rowIndex }) => {
     return (
-      <div className="w-20 h-20 overflow-hidden">
-        <Image src={rowData?.studentPhoto} preview />
-      </div>
+      <>
+        {rowData?.studentPhoto ? (
+          <div className="w-12 h-12 overflow-hidden">
+            <Image src={rowData?.studentPhoto} preview />
+          </div>
+        ) : (
+          <div className="w-12 h-12  flex justify-center items-center overflow-hidden">
+            <FaImage size={60} color="red" />
+          </div>
+        )}
+      </>
     );
   };
   return (
@@ -191,22 +203,21 @@ function Admission(_params) {
       >
         <EnquiryForm mode={"s"} />
       </Dialog>
-      <div className="p-3 m-4 border-t-4 rounded-lg border-blue-500 shadow-md">
+      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
         <div className="flex justify-between">
-          <strong className="text-sm">Student Admission List</strong>
-
+          <strong className="md:text-md lg:text-2xl">Student Admission List</strong>
           <div className="flex gap-4">
             <Button
-              className="flex items-center justify-center rounded-lg gap-4 text-sm p-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+            label="New Enquiry"
+            icon={<FaPlus />}
+              className="flex items-center justify-center rounded-lg gap-2 text-sm p-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => setOpenModel2(true)}
-            >
-              <FaPlus />
-              New Enquiry
-            </Button>
+             />            
+              
             <Button
               label="New Admission"
               icon={<FaPlus />}
-              className="text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+              className="flex gap-2 text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => {
                 setMode("s");
                 setOpenModel(true);
@@ -228,13 +239,14 @@ function Admission(_params) {
           <div className="flex gap-2 mt-5 ">
             <Button
               label="Filter"
-              className="bg-blue-500 text-white px-3 py2"
+              icon={<FaFilter/>}
+              className="flex gap-2 bg-blue-500 text-white px-3 py2"
             />
-            <Button label="Clear" className="bg-red-500 text-white px-3 py-2" />
+            <Button label="Clear" icon={<FaRedo />} className="flex gap-2 bg-red-500 text-white px-3 py-2" />
           </div>
         </div>
       </div>
-      <div className="border-t-4 rounded-lg border-blue-500 shadow-md m-4">
+      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
         <DataTable
           value={admission}
           size="small"
@@ -245,70 +257,70 @@ function Admission(_params) {
         >
           <Column
             field="index"
-            headerClassName="p-3 border-black border  bg-slate-200"
+          headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Sr."
             sortable
             body={indexTemplate}
           ></Column>
           <Column
             field="studentPhoto"
-            headerClassName="p-3 border-black border  bg-slate-200"
+             headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Photo"
             body={imageTemplate}
             sortable
           ></Column>
           <Column
             field="_id"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Student Id"
             sortable
           ></Column>
           <Column
             field="userid"
-            headerClassName="p-3 border-black border  bg-slate-200"
+           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="User Id"
             sortable
           ></Column>
           <Column
             field="category"
-            headerClassName="p-3 border-black border  bg-slate-200"
+ headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Password"
             sortable
           ></Column>
           <Column
             field="studentName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+      headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Student Name"
             sortable
           ></Column>
           <Column
             field="fatherName"
-            headerClassName="p-3 border-black border  bg-slate-200"
+           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Father Name"
             sortable
           ></Column>
           <Column
             field="mobileNo"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Mobile No."
             sortable
           ></Column>
           <Column
             field="examCenter"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Exam Center"
             sortable
           ></Column>
           <Column
             field="regdDate"
-            headerClassName="p-3 border-black border  bg-slate-200"
+           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Req. Date"
             body={(e) => moment(e).format("DD/MM/YYYY")}
             sortable
           ></Column>
           <Column
             field="status"
-            headerClassName="p-3 border-black border  bg-slate-200"
+            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
             header="Action"
             body={ActionbodyTemplate}
             sortable

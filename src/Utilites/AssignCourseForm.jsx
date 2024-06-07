@@ -1,27 +1,21 @@
 import { Button } from "primereact/button";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdmissionbyId } from "../Redux/Slice/AdmissionSlice";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
 import {
   createAssignCourse,
-  updateAssignCourse,getclear
-} from "../Redux/Slice/AssignCourseSlice";
-import { Toast } from "primereact/toast";
-
+  updateAssignCourse} from "../Redux/Slice/AssignCourseSlice";
+import { BiSave , BiUpload } from "react-icons/bi";
 export default function AssignCourseForm({ mode }) {
   const [formData, setFormData] = useState({ studentId: null, courseId: null });
   const dispatch = useDispatch();
-  const toast = useRef();
   const { userid } = useSelector((state) => state.UserAuth);
   const { admission } = useSelector((state) => state.Admission);
   const { course } = useSelector((state) => state.Course);
-  const { message, error, loading } = useSelector(
-    (state) => state.AssignCourse
-  );
 
   const formDatahandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value,userid : userid });
@@ -109,15 +103,17 @@ export default function AssignCourseForm({ mode }) {
         {mode === "s" ? (
           <Button
             label="Save"
+            icon={<BiSave size={20} />}
             disabled={formData.courseId && formData.studentId ? false : true}
             onClick={confirm1}
-            className="bg-green-500 text-white py-3 px-8 mt-3 "
+            className="bg-green-500 hover:bg-green-600 flex gap-3 text-white py-3 px-8 mt-3 "
           />
         ) : (
           <Button
             label="Update"
+            icon={<BiUpload size={20} />}
             onClick={confirm2}
-            className="bg-blue-500 text-white py-3 px-8 mt-3 "
+            className="bg-blue-500 hover:bg-blue-600 flex gap-3 text-white py-3 px-8 mt-3 "
           />
         )}
       </div>
