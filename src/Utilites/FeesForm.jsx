@@ -100,6 +100,8 @@ export default function FeesCollection({ mode, data }) {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       defaultFocus: "accept",
+      acceptClassName:"bg-blue-600 py-3 px-5 text-white",
+      rejectClassName:"py-3 px-5 mr-3",
       accept: onSave,
     });
   };
@@ -110,6 +112,8 @@ export default function FeesCollection({ mode, data }) {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       defaultFocus: "accept",
+      acceptClassName:"bg-blue-600 py-3 px-5 text-white",
+      rejectClassName:"py-3 px-5 mr-3",
       accept: onUpdate,
     });
   };
@@ -342,10 +346,8 @@ export default function FeesCollection({ mode, data }) {
               formData?.date &&
               formData?.paymentMode &&
               formData?.studentname &&
-              formData?.dueAmt &&
-              formData?.dicount &&
-              formData?.paidAmt &&
-              formData?.ApayDueAmt &&
+              formData?.dueAmt &&              
+              formData?.paidAmt &&              
               formData?.collecteBy
                 ? false
                 : true

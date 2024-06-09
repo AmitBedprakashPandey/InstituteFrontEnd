@@ -8,6 +8,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BiCamera, BiSave, BiUpload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { getStateAll } from "../Redux/Slice/StateSlice";
+import { getUser } from "../Redux/Slice/UserSlice";
 import {
   getSchoolbyId,
   createSchool,
@@ -38,6 +39,7 @@ export default function School() {
   }, [School]);
   useLayoutEffect(() => {
     dispatch(getStateAll());
+    dispatch(getUser())
     dispatch(getSchoolbyId(userid));
   }, [dispatch]);
 
@@ -151,7 +153,7 @@ export default function School() {
   return (
     <>
       <Toast ref={toast} position="bottom-right" />
-      <diV className="min-w-[28%] max-w-[40%] bg-white relative p-3">
+      <diV className="min-w-[30%] max-w-[50%] bg-white relative p-3">
         <div className="flex gap-16 items-center justify-center">
           <div className="relative">
           <label>School Image</label>
