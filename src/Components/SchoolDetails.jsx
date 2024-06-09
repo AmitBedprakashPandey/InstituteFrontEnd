@@ -15,7 +15,7 @@ export default function SchoolDetails(params) {
     }
   }, [dispatch,School]);
   return (
-    <div className="flex justify-center pt-10 w-96">
+    <div className="flex justify-center pt-10">
       <SchoolForm />
     </div>
   );
