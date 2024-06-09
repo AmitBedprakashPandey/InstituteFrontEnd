@@ -13,6 +13,7 @@ import UserMang from "./Components/Admin/Components/UserMang";
 import FeesCollection from "./Components/Fees/FeesCollection";
 import PrintPage from "./Utilites/PrintPage";
 import School from "./Components/Setup/School";
+import SchoolDetails from "./Components/SchoolDetails";
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
         <Route path="/school/enqiry" element={<Enquiry />} />
         <Route path="/school/admission" element={<Admission />} />
         <Route path="/school/assigncourse" element={<AssignCourse />} />
+        <Route path="/school/form" element={<SchoolDetails />} />
         <Route path="/setup/school" element={<School />} />
         <Route path="/setup/course" element={<Course />} />
         <Route path="/login" element={<LoginForm />} />

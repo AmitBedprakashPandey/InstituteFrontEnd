@@ -27,16 +27,18 @@ function NavBar() {
     return str.trim().charAt(0); // Correct usage of charAt
   };
 useLayoutEffect(()=>{
-  dispatch(getSchoolbyId(userid));  
-  console.log(School[0]);
+  dispatch(getSchoolbyId(userid));    
 },[dispatch])
   useEffect(() => {
     if (!localStorage.getItem("userToken")) {
       navigate("/login");
     }
     dispatch(getUser());
+    if(!School){
+      navigate("/school/form");
+    }
     // dispatch(getProtection())
-  }, [navigate]);
+  }, [navigate,dispatch]);
 
   const accept = () => {
     dispatch(logout());

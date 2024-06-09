@@ -30,7 +30,7 @@ export default function School() {
     });
   };
   useEffect(() => {
-    if (School[0].status === true) {
+    if (School[0]?.status === true) {
       setFormData(School[0]);
     }
   }, [School]);
@@ -106,9 +106,9 @@ export default function School() {
   };
 
   const onUpdate = () => {
-    dispatch(updateSchool(formData)).then(()=>{
-      if(message){
-        show(message)
+    dispatch(updateSchool(formData)).then(() => {
+      if (message) {
+        show(message);
       }
     });
   };
@@ -139,7 +139,7 @@ export default function School() {
 
   return (
     <>
-      <Toast ref={toast} position="bottom-right"/>
+      <Toast ref={toast} position="bottom-right" />
       <diV className="min-w-[28%] max-w-[40%] bg-white relative p-3">
         <div className="flex justify-center">
           <div className="relative">

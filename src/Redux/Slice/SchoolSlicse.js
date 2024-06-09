@@ -78,6 +78,7 @@ const SchoolSlice = createSlice({
       })
       .addCase(getSchoolbyId.fulfilled, (state, action) => {        
         state.School = action.payload;        
+        
         state.loading = false;
         state.error = null;
       })
