@@ -105,7 +105,6 @@ const SchoolSlice = createSlice({
         state.error = null;
       })
       .addCase(updateSchool.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.School = action.payload.data
         // const index = state.School.findIndex(
         //   (enq) => enq._id === action.payload.data._id

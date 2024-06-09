@@ -25,6 +25,7 @@ export default function School() {
   const toast = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -32,14 +33,16 @@ export default function School() {
       userid: userid,
     });
   };
+
   useEffect(() => {
     if (School?.status === true) {
       setFormData(School);
     }
   }, [School]);
+
   useLayoutEffect(() => {
     dispatch(getStateAll());
-    dispatch(getUser())
+    dispatch(getUser());
     dispatch(getSchoolbyId(userid));
   }, [dispatch]);
 
@@ -115,15 +118,11 @@ export default function School() {
   }, [message]);
 
   const onSave = () => {
-    dispatch(createSchool(formData)).then((doc) => {});
+    dispatch(createSchool(formData));
   };
 
   const onUpdate = () => {
-    dispatch(updateSchool(formData)).then(() => {
-      if (message) {
-        show(message);
-      }
-    });
+    dispatch(updateSchool(formData));
   };
 
   const confirm1 = () => {
@@ -153,10 +152,11 @@ export default function School() {
   return (
     <>
       <Toast ref={toast} position="bottom-right" />
+      <ConfirmDialog />
       <diV className="min-w-[30%] max-w-[50%] bg-white relative p-3">
         <div className="flex gap-16 items-center justify-center">
           <div className="relative">
-          <label>School Image</label>
+            <label>School Image</label>
             <img
               src={formData?.schoolPhoto}
               className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
