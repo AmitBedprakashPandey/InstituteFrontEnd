@@ -30,8 +30,8 @@ export default function School() {
     });
   };
   useEffect(() => {
-    if (School[0]?.status === true) {
-      setFormData(School[0]);
+    if (School?.status === true) {
+      setFormData(School);
     }
   }, [School]);
   useLayoutEffect(() => {

@@ -22,23 +22,26 @@ function NavBar() {
   const dispatch = useDispatch();
   const { School, message } = useSelector((state) => state.School);
   const { userid } = useSelector((state) => state.UserAuth);
+
   const getFirstLetter = (str) => {
     if (!str) return "";
     return str.trim().charAt(0); // Correct usage of charAt
   };
-useLayoutEffect(()=>{
-  dispatch(getSchoolbyId(userid));    
-},[dispatch])
+  
+  useLayoutEffect(() => {
+    dispatch(getSchoolbyId(userid));
+  }, [dispatch]);
+
   useEffect(() => {
     if (!localStorage.getItem("userToken")) {
       navigate("/login");
     }
     dispatch(getUser());
-    if(!School){
+    if (!School) {
       navigate("/school/form");
     }
     // dispatch(getProtection())
-  }, [navigate,dispatch]);
+  }, [navigate, dispatch]);
 
   const accept = () => {
     dispatch(logout());
@@ -67,15 +70,22 @@ useLayoutEffect(()=>{
         <div className="flex items-center gap-10">
           <div>
             <h1 className="flex items-center  gap-5 text-white capitalize font-bold md:text-xs lg:text-lg">
-              <Avatar size="normal" shape="circle" image={School[0]?.schoolPhoto} />            
-            {School[0]?.schoolName}
+              <Avatar
+                size="normal"
+                shape="circle"
+                image={School?.schoolPhoto}
+              />
+              {School?.schoolName}
             </h1>
-          </div>          
+          </div>
           <div className="flex">
-          <div class="relative group">
-              <a href="/" class="md:text-xs flex items-center gap-4 lg:text-lg capitalize px-4 py-2 rounded-lg focus:outline-none text-white">
+            <div class="relative group">
+              <a
+                href="/"
+                class="md:text-xs flex items-center gap-4 lg:text-lg capitalize px-4 py-2 rounded-lg focus:outline-none text-white"
+              >
                 Home
-              </a>            
+              </a>
             </div>
             <div class="relative group">
               <button class="md:text-xs flex items-center gap-4 lg:text-lg capitalize px-4 py-2 rounded-lg focus:outline-none text-white">
