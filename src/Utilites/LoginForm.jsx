@@ -11,13 +11,16 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.UserAuth);
+  const { School } = useSelector((state) => state.School);
   const formDataHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const onLogin = () => {
     dispatch(userlogin(formData)).then(() => {
       if (localStorage.getItem("userToken")) {
-        navigate("/");
+        
+          navigate("/school/form");
+        
       }
     });
   };

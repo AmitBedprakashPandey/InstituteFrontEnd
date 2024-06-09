@@ -64,7 +64,7 @@ export const SchoolStatus = createAsyncThunk(
 const SchoolSlice = createSlice({
   name: "School",
   initialState: {
-    School: [],
+    School: null,
     loading: false,
     error: null,
     message: null,
@@ -77,13 +77,13 @@ const SchoolSlice = createSlice({
         state.error = null;
       })
       .addCase(getSchoolbyId.fulfilled, (state, action) => {        
-        state.School = action.payload[0];        
-        
+        state.School = action.payload?.data;            
         state.loading = false;
         state.error = null;
       })
       .addCase(getSchoolbyId.rejected, (state, action) => {
         state.loading = false;
+        state.School = []
         state.error = action.payload;
       })
       .addCase(createSchool.pending, (state) => {
@@ -93,7 +93,7 @@ const SchoolSlice = createSlice({
       .addCase(createSchool.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.School.push(action.payload.data);
+        state.School = action.payload.data;
         state.message = action.payload?.message;
       })
       .addCase(createSchool.rejected, (state, action) => {
@@ -106,12 +106,13 @@ const SchoolSlice = createSlice({
       })
       .addCase(updateSchool.fulfilled, (state, action) => {
         console.log(action.payload);
-        const index = state.School.findIndex(
-          (enq) => enq._id === action.payload.data._id
-        );
-        if (index !== -1) {
-          state.School[index] = action.payload.data;
-        }
+        state.School = action.payload.data
+        // const index = state.School.findIndex(
+        //   (enq) => enq._id === action.payload.data._id
+        // );
+        // if (index !== -1) {
+        //   state.School[index] = action.payload.data;
+        // }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;

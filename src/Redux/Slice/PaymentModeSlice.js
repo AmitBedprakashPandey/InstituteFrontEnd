@@ -50,6 +50,17 @@ export const deletePaymentMode = createAsyncThunk(
     }
   }
 );
+export const PaymentModeStatus = createAsyncThunk(
+  "PaymentMode/status",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/status/${data._id}`, data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data.error);
+    }
+  }
+);
 
 const PaymentModeSlice = createSlice({
   name: "PaymentMode",
@@ -127,6 +138,26 @@ const PaymentModeSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(deletePaymentMode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+       .addCase(PaymentModeStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(PaymentModeStatus.fulfilled, (state, action) => {
+        const index = state.CourseType.findIndex(
+          (enq) => enq._id === action.payload.data._id
+        );
+        if (index !== -1) {
+          state.CourseType[index].status = action.payload.data.status;
+        }
+        state.loading = false;
+        state.error = null;
+        state.message = action.payload.message;
+      })
+      .addCase(PaymentModeStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

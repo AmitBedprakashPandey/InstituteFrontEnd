@@ -13,14 +13,16 @@ import {
   createSchool,
   updateSchool,
 } from "../Redux/Slice/SchoolSlicse";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
+import { useNavigate } from "react-router-dom";
 export default function School() {
   const [formData, setFormData] = useState();
   const { userid } = useSelector((state) => state.UserAuth);
   const { State } = useSelector((state) => state.State);
   const { School, message } = useSelector((state) => state.School);
   const toast = useRef();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const formDataHandler = (e) => {
     setFormData({
@@ -91,6 +93,15 @@ export default function School() {
     }
   };
 
+  const schoolStampHandler = async (e) => {
+    try {
+      const base64String = await handleImageUpload(e.target.files[0]);
+      setFormData({ ...formData, schoolStamp: base64String });
+    } catch (error) {
+      console.error("Error handling father image:", error);
+    }
+  };
+
   const show = (message) => {
     toast.current.show({ severity: "info", summary: message, life: 2000 });
   };
@@ -102,7 +113,7 @@ export default function School() {
   }, [message]);
 
   const onSave = () => {
-    dispatch(createSchool(formData));
+    dispatch(createSchool(formData)).then((doc) => {});
   };
 
   const onUpdate = () => {
@@ -141,8 +152,9 @@ export default function School() {
     <>
       <Toast ref={toast} position="bottom-right" />
       <diV className="min-w-[28%] max-w-[40%] bg-white relative p-3">
-        <div className="flex justify-center">
+        <div className="flex gap-16 items-center justify-center">
           <div className="relative">
+          <label>School Image</label>
             <img
               src={formData?.schoolPhoto}
               className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
@@ -156,6 +168,27 @@ export default function School() {
             />
             <label
               htmlFor="schoolphoto"
+              className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
+            >
+              <BiCamera size={20} />
+            </label>
+          </div>
+          <div className="relative">
+            <label>School Stamp</label>
+            <img
+              src={formData?.schoolStamp}
+              className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
+            />
+
+            <input
+              id="schoolStamp"
+              type="file"
+              accept="image/*"
+              onChange={schoolStampHandler}
+              className="hidden"
+            />
+            <label
+              htmlFor="schoolStamp"
               className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
             >
               <BiCamera size={20} />
@@ -295,7 +328,7 @@ export default function School() {
           </FloatLabel>
         </div>
         <div className="pt-5 flex justify-end">
-          {School[0]?.status === true ? (
+          {School?.status === true ? (
             <Button
               label="update"
               onClick={confirm2}

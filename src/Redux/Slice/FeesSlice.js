@@ -53,7 +53,7 @@ export const FeesStatus = createAsyncThunk(
   "Fees/status",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${url}/${data._id}`, data);
+      const response = await axios.put(`${url}/status/${data._id}`, data);
       return response.data;
     } catch (error) {
       rejectWithValue(error.response.data.error);
@@ -96,7 +96,7 @@ const FeesSlice = createSlice({
       .addCase(createFees.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.Fees.push(action.payload.data);
+        state.Fees.push(action.payload?.data);
 
         state.message = action.payload?.message;
       })
@@ -110,14 +110,14 @@ const FeesSlice = createSlice({
       })
       .addCase(updateFees.fulfilled, (state, action) => {
         const index = state.Fees.findIndex(
-          (enq) => enq._id === action.payload.data._id
+          (enq) => enq._id === action.payload?.data._id
         );
         if (index !== -1) {
-          state.Fees[index] = action.payload.data;
+          state.Fees[index] = action.payload?.data;
         }
         state.loading = false;
         state.error = null;
-        state.message = action.payload.message;
+        state.message = action.payload?.message;
       })
       .addCase(updateFees.rejected, (state, action) => {
         state.loading = false;

@@ -29,7 +29,6 @@ export default function FeesCollection() {
   useLayoutEffect(() => {
     dispatch(getFeesbyId(userid));
     dispatch(getAdmissionbyId(userid));
-
   }, [dispatch]);
   const dateDatahandler = (e) => {
     setDateData({ ...dateData, [e.target.name]: e.target.value });

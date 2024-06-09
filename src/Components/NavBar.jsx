@@ -22,24 +22,21 @@ function NavBar() {
   const dispatch = useDispatch();
   const { School, message } = useSelector((state) => state.School);
   const { userid } = useSelector((state) => state.UserAuth);
-
   const getFirstLetter = (str) => {
     if (!str) return "";
     return str.trim().charAt(0); // Correct usage of charAt
   };
-  
   useLayoutEffect(() => {
-    dispatch(getSchoolbyId(userid));
-  }, [dispatch]);
-
+    dispatch(getSchoolbyId(userid))
+    if (School === undefined) {
+      navigate("/school/form");
+    }
+  }, [dispatch, navigate]);
   useEffect(() => {
     if (!localStorage.getItem("userToken")) {
       navigate("/login");
     }
     dispatch(getUser());
-    if (!School) {
-      navigate("/school/form");
-    }
     // dispatch(getProtection())
   }, [navigate, dispatch]);
 

@@ -9,29 +9,33 @@ import { getSchoolbyId } from "../Redux/Slice/SchoolSlicse";
 import { useDispatch, useSelector } from "react-redux";
 export default function PrintPage(params) {
   const ref = useRef();
+  
   const { School } = useSelector((state) => state.School);
   const { userid } = useSelector((state) => state.UserAuth);
   const location = useLocation();
   const { student, fees } = location.state || {};
   const dispatch = useDispatch();
-useLayoutEffect(()=>{
-dispatch(getSchoolbyId(userid))
-},[])
+ 
   const table = [
-    { sr: 1, part: "Admission Fee", amt: 0 },
-    { sr: 2, part: "Annual Fee", amt: 0 },
-    { sr: 3, part: "Tuition Fee", amt: 400 },
-    { sr: 4, part: "Transport Fee", amt: 0 },
-    { sr: 5, part: "Stationary Fee", amt: 0 },
-    { sr: 6, part: "Exam Fee", amt: 0 },
-    { sr: 7, part: "Reg Fee", amt: 0 },
-    { sr: 8, part: "Misc Fee", amt: 0 },
-    { sr: 9, part: "Other Fee", amt: 0 },
-    { sr: 10, part: "Caution Money", amt: 0 },
-    { sr: 11, part: "Previous Balance", amt: 550 },
+    { sr: 1, part: "Admission Fee", amt: fees.admissionFee || 0 },
+    { sr: 2, part: "Annual Fee", amt: fees.annualFee || 0 },
+    { sr: 3, part: "Tuition Fee", amt:fees.tuitionFee || 0 },
+    { sr: 4, part: "Transport Fee", amt: fees.transportFee || 0},
+    { sr: 5, part: "Stationary Fee", amt: fees?.stationoryFees || 0 },
+    { sr: 6, part: "Exam Fee", amt: fees.examFee || 0 },
+    { sr: 7, part: "Reg Fee", amt: fees.regFee || 0},
+    { sr: 8, part: "Misc Fee", amt: fees?.miscFee || 0 },
+    { sr: 9, part: "Other Fee", amt: fees?.otherfee || 0 },
+    { sr: 10, part: "Caution Money", amt: fees?.cautionmoneyFee || 0},
+    { sr: 11, part: "Previous Balance", amt:fees?.previousbalanceFee || 0 },
   ];
+  const  total = table.reduce((acc, item) => acc + item.amt, 0);
+  useLayoutEffect(() => {
+    dispatch(getSchoolbyId(userid));
+  }, [dispatch]);
+ 
 
-  console.log(School[0]);
+  console.log(fees);
 
   return (
     <>
@@ -49,15 +53,17 @@ dispatch(getSchoolbyId(userid))
       <div ref={ref} className="flex justify-center">
         <div className="flex print:scale-95 bg-white">
           <div className="w-[400px] h-[800px] shadow-slate-800 print:shadow-none shadow flex flex-col items-center">
-          <h1 className="text-3xl font-black uppercase mt-4 flex items-center gap-5">
-            <Avatar image={School[0]?.schoolPhoto} shape="circle" size="large" />
-              {School[0]?.schoolName}
-            </h1>               
+            <h1 className="text-3xl font-black uppercase mt-4 flex items-center gap-5">
+              <Avatar image={School?.schoolPhoto} shape="circle" size="large" />
+              {School?.schoolName}
+            </h1>
             <h1 className="text-xs bg-red-300 w-full px-3 py-1 flex justify-center mt-2">
-              <span className="font-bold">Mobile: </span>{School[0]?.phone} / {School[0]?.phone2}
+              <span className="font-bold">Mobile: </span>
+              {School?.phone} / {School?.phone2}
             </h1>
             <h1 className="mt-1 text-xs border border-slate-600 border-l-0 border-r-0 w-full px-3 py-0 flex justify-start">
-            <span className="font-bold text-nowrap">Address :</span> {School[0]?.address}
+              <span className="font-bold text-nowrap">Address :</span><p className="uppercase">
+              {School?.address}{" "}{School?.city}{" "}{School?.state}{" "}{School?.pincode}</p>
             </h1>
             <h1 className="mt-2 text-white bg-slate-800 w-full px-3 py-1 flex justify-center">
               FEE RECEIPT
@@ -67,18 +73,41 @@ dispatch(getSchoolbyId(userid))
             </h1>
             <div className="flex justify-between w-full gap-5 px-3">
               <ul className="text-xs">
-                <li><span className="font-bold">Name:</span> {student[0].studentName}</li>
-                <li><span className="font-bold">Father: </span> {student[0].fatherName}</li>
-                <li><span className="font-bold">Collected By: </span> {fees.collecteBy}</li>
-                <li><span className="font-bold">Narration: </span> {fees.remark}</li>
-                <li><span className="font-bold">Fee Month: </span> {moment(fees.date).format("MMMM-yyyy")}</li>
+                <li>
+                  <span className="font-bold">Name:</span> {student.studentName}
+                </li>
+                <li>
+                  <span className="font-bold">Father: </span>{" "}
+                  {student.fatherName}
+                </li>
+                <li>
+                  <span className="font-bold">Collected By: </span>{" "}
+                  {fees.collecteBy}
+                </li>
+                <li>
+                  <span className="font-bold">Narration: </span> {fees.remark}
+                </li>
+                <li>
+                  <span className="font-bold">Fee Month: </span>{" "}
+                  {moment(fees.date).format("MMMM-yyyy")}
+                </li>
               </ul>
               <ul className="w-36 text-xs">
                 <li className="font-bold">Payment Id:</li>
-                <li><span className="font-bold">Date: </span>{moment(fees.date).format("DD/MM/YYYY")}</li>
-                <li><span className="font-bold">Class: </span></li>
-                <li><span className="font-bold">Ledger Number: </span></li>
-                <li><span className="font-bold">Payment Mode: </span>{fees.paymentMode}</li>
+                <li>
+                  <span className="font-bold">Date: </span>
+                  {moment(fees.date).format("DD/MM/YYYY")}
+                </li>
+                <li>
+                  <span className="font-bold">Class: </span>
+                </li>
+                <li>
+                  <span className="font-bold">Ledger Number: </span>
+                </li>
+                <li>
+                  <span className="font-bold">Payment Mode: </span>
+                  {fees.paymentMode}
+                </li>
               </ul>
             </div>
             <div className="flex justify-center mt-3 w-full px-3">
@@ -135,36 +164,34 @@ dispatch(getSchoolbyId(userid))
               </ul>
               <ul className="text-xs">
                 <li>
-                  <span>950</span>
+                  <span>{total}</span>
                 </li>
                 <li>
                   <span>0</span>
                 </li>
                 <li>
-                  <span>10</span>
+                  <span>{fees?.dicount}</span>
                 </li>
                 <li>
-                  <span>940</span>
+                  <span>{total + fees?.dicount}</span>
                 </li>
                 <li>
-                  <span>800</span>
+                  <span>{fees?.paidAmt}</span>
                 </li>
                 <li>
-                  <span>140</span>
+                  <span>{fees?.ApayDueAmt}</span>
                 </li>
               </ul>
             </div>
 
             <div className="flex justify-evenly w-full mt-3">
               <div className="flex flex-col items-center">
-                <div className="border w-24 h-24">
-
-                </div>
+                <div className="border w-24 h-24"></div>
                 <p>Payment QR</p>
               </div>
               <div className="flex flex-col items-center">
-                <div className="border w-24 h-24">
-
+                <div className="w-24 h-24 relative overflow-hidden">
+                  <img src={School?.schoolStamp} className="w-full" />
                 </div>
                 <p>School Stamp</p>
               </div>
@@ -174,7 +201,6 @@ dispatch(getSchoolbyId(userid))
             </p>
           </div>
           <div className="p-0 m-0 border border-black border-dashed mx-2" />
-         
         </div>
       </div>
     </>
