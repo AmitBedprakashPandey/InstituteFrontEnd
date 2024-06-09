@@ -5,7 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import {BiSave , BiUpload} from 'react-icons/bi';
+import { BiSave, BiUpload } from "react-icons/bi";
 import { Toast } from "primereact/toast";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import { getAssignCoursebyId } from "../Redux/Slice/AssignCourseSlice";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
 import { createFees, updateFees } from "../Redux/Slice/FeesSlice";
 import { getPaymentModeAll } from "../Redux/Slice/PaymentModeSlice";
+import { getSchoolbyId } from "../Redux/Slice/SchoolSlicse";
 
 export default function FeesCollection({ mode, data }) {
   const [formData, setFormData] = useState();
@@ -25,6 +26,7 @@ export default function FeesCollection({ mode, data }) {
   const { AssignCourse } = useSelector((state) => state.AssignCourse);
   const { userid } = useSelector((state) => state.UserAuth);
   const { PaymentMode } = useSelector((state) => state.PayementMode);
+
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -32,6 +34,7 @@ export default function FeesCollection({ mode, data }) {
       userid: userid,
     });
   };
+
   useLayoutEffect(() => {
     if (data) {
       setFormData(data);
@@ -42,8 +45,9 @@ export default function FeesCollection({ mode, data }) {
     dispatch(getAdmissionbyId(userid));
     dispatch(getAssignCoursebyId(userid));
     dispatch(getCoursebyId(userid));
+    dispatch(getSchoolbyId(userid));
     dispatch(getPaymentModeAll());
-  }, [dispatch,userid]);
+  }, [dispatch, userid]);
 
   const show = (message) => {
     toast.current.show({ severity: "info", summary: message, life: 1000 });
@@ -66,7 +70,7 @@ export default function FeesCollection({ mode, data }) {
       (item) => item.userid && item._Id === foundData[0]?.courseId
     );
     setFormData({ ...formData, dueAmt: courseData[0]?.courseFee });
-  }, [formData?.studentname,AssignCourse,course,admission]);
+  }, [formData?.studentname, AssignCourse, course, admission]);
 
   useEffect(() => {
     const dueAmt = Number(formData?.dueAmt) || 0;
@@ -203,16 +207,90 @@ export default function FeesCollection({ mode, data }) {
         <FloatLabel>
           <InputNumber
             disabled
-            useGrouping={true}
             id="ApayDueAmt"
             name="ApayDueAmt"
             value={Number(formData?.ApayDueAmt)}
+            useGrouping={false}
             onChange={(e) => formDataHandler(e.originalEvent)}
             inputClassName="border-slate-300 border py-3 pl-3 w-full disabled:bg-slate-300 disabled:cursor-not-allowed"
           />
           <label htmlFor="ApayDueAmt">
             After Pay Due Amount <strong className="text-red-500">*</strong>
           </label>
+        </FloatLabel>
+      </div>
+      <div className="mt-7 grid grid-cols-4 gap-3">
+        <FloatLabel>
+          <InputNumber
+            id="admissionFee"
+            name="admissionFee"
+            value={formData?.admissionFee}
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="admissionFee">
+            Admission Fee <strong className="text-red-500">*</strong>
+          </label>
+        </FloatLabel>
+        <FloatLabel>
+          <InputNumber
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            id="annualFee"
+            name="annualFee"
+            value={formData?.annualFee}
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="annualFee">Annual Fee </label>
+        </FloatLabel>
+        <FloatLabel>
+          <InputNumber
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            id="tuitionFee"
+            name="tuitionFee"
+            value={formData?.tuitionFee}
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="tuitionFee">Tuition Fee </label>
+        </FloatLabel>
+        <FloatLabel>
+          <InputNumber
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            id="transportFee"
+            name="transportFee"
+            value={formData?.transportFee}
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="transportFee">Transport Fee </label>
+        </FloatLabel>
+      </div>
+      <div className="mt-7 grid grid-cols-4 gap-3">
+        <FloatLabel>
+          <InputNumber
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            id="examFee"
+            name="examFee"
+            value={formData?.examFee}
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="examFee">
+            Exam Fee <strong className="text-red-500">*</strong>
+          </label>
+        </FloatLabel>
+        <FloatLabel>
+          <InputNumber
+            inputClassName="border-slate-300 border pl-3 w-full h-12"
+            id="regFee"
+            name="regFee"
+            value={formData?.regFee}
+            useGrouping={false}
+            onChange={(e) => formDataHandler(e.originalEvent)}
+          />
+          <label htmlFor="regFee">Reg Fee </label>
         </FloatLabel>
       </div>
       <div className="mt-7 grid grid-cols-2 gap-3">

@@ -8,3 +8,15 @@
 }
 
 
+.p-panelmenu-header-active {
+  background-color: #007ad9;
+  color: white;
+}
+
+.p-menuitem-link-active {
+  color: white;
+}
+
+.p-menuitem-link {
+  color: black;
+}

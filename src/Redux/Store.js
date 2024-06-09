@@ -1,17 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import EnquirySlice from "../Redux/Slice/EnquirySlice";
-import "./Slice/Http";
 import AdmissionSlice from "./Slice/AdmissionSlice";
-import UserSlice from "./Slice/UserSlice";
-import CourseSlice from "./Slice/CourseSlice";
 import AssignCourseSlice from "./Slice/AssignCourseSlice";
-import FeesSlice from "./Slice/FeesSlice";
+import CourseSlice from "./Slice/CourseSlice";
 import CourseTypeSlice from "./Slice/CourseTypeSlice";
-import StateSlice from "./Slice/StateSlice";
-import GenderSlice from "./Slice/GenderSlice";
-import ReligionSlice from "./Slice/ReligionSlice";
+import FeesSlice from "./Slice/FeesSlice";
 import FoundationSlice from "./Slice/FoundationSlice";
+import GenderSlice from "./Slice/GenderSlice";
+import "./Slice/Http";
 import PaymentModeSlice from "./Slice/PaymentModeSlice";
+import ReligionSlice from "./Slice/ReligionSlice";
+import SchoolSlicse from "./Slice/SchoolSlicse";
+import StateSlice from "./Slice/StateSlice";
+import UserSlice from "./Slice/UserSlice";
 const Store = configureStore({
   reducer: {
     Enquiry: EnquirySlice,
@@ -25,7 +26,8 @@ const Store = configureStore({
     Gender :GenderSlice,
     Religion:ReligionSlice,
     Foundation:FoundationSlice,
-    PayementMode:PaymentModeSlice
+    PayementMode:PaymentModeSlice,
+    School:SchoolSlicse
   },
 });
 export default Store;

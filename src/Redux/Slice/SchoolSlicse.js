@@ -2,21 +2,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const url = process.env.REACT_APP_API_URL + "/coursetype";
+const url = process.env.REACT_APP_API_URL + "/school";
 
-export const getCourseTypebyId = createAsyncThunk(
-  "CourseType/getById",
+export const getSchoolbyId = createAsyncThunk(
+  "School/getById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${url}/${id}`);
+      const response = await axios.get(`${url}/${id}`);      
       return response.data;
     } catch (error) {
       rejectWithValue(error.response.data.error);
     }
   }
 );
-export const createCourseType = createAsyncThunk(
-  "CourseType/create",
+export const createSchool = createAsyncThunk(
+  "School/create",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${url}`, data);
@@ -26,10 +26,11 @@ export const createCourseType = createAsyncThunk(
     }
   }
 );
-export const updateCourseType = createAsyncThunk(
-  "CourseType/update",
+export const updateSchool = createAsyncThunk(
+  "School/update",
   async (data, { rejectWithValue }) => {
     try {
+        
       const response = await axios.put(`${url}/${data._id}`, data);
       return response.data;
     } catch (error) {
@@ -37,8 +38,8 @@ export const updateCourseType = createAsyncThunk(
     }
   }
 );
-export const deleteCourseType = createAsyncThunk(
-  "CourseType/delete",
+export const deleteSchool = createAsyncThunk(
+  "School/delete",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${url}/${id}`);
@@ -48,8 +49,8 @@ export const deleteCourseType = createAsyncThunk(
     }
   }
 );
-export const CourseTypeStatus = createAsyncThunk(
-  "CourseType/status",
+export const SchoolStatus = createAsyncThunk(
+  "School/status",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${url}/status/${data._id}`, data);
@@ -59,105 +60,101 @@ export const CourseTypeStatus = createAsyncThunk(
     }
   }
 );
-const CourseTypeSlice = createSlice({
-  name: "CourseType",
+
+const SchoolSlice = createSlice({
+  name: "School",
   initialState: {
-    CourseType: [],
+    School: [],
     loading: false,
     error: null,
     message: null,
   },
-  reducers: {
-    getclear: (state) => {
-      state.message = null;
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getCourseTypebyId.pending, (state) => {
+      .addCase(getSchoolbyId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getCourseTypebyId.fulfilled, (state, action) => {
-        state.CourseType = action.payload;
+      .addCase(getSchoolbyId.fulfilled, (state, action) => {        
+        state.School = action.payload;        
         state.loading = false;
         state.error = null;
       })
-      .addCase(getCourseTypebyId.rejected, (state, action) => {
+      .addCase(getSchoolbyId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createCourseType.pending, (state) => {
+      .addCase(createSchool.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createCourseType.fulfilled, (state, action) => {
+      .addCase(createSchool.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.CourseType.push(action.payload.data);
+        state.School.push(action.payload.data);
         state.message = action.payload?.message;
       })
-      .addCase(createCourseType.rejected, (state, action) => {
+      .addCase(createSchool.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateCourseType.pending, (state) => {
+      .addCase(updateSchool.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateCourseType.fulfilled, (state, action) => {
-        const index = state.CourseType.findIndex(
+      .addCase(updateSchool.fulfilled, (state, action) => {
+        console.log(action.payload);
+        const index = state.School.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.CourseType[index] = action.payload.data;
+          state.School[index] = action.payload.data;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(updateCourseType.rejected, (state, action) => {
+      .addCase(updateSchool.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteCourseType.pending, (state) => {
+      .addCase(deleteSchool.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteCourseType.fulfilled, (state, action) => {
+      .addCase(deleteSchool.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.CourseType = state.CourseType.filter(
+        state.School = state.School.filter(
           (enq) => enq._id !== action.payload.id
         );
         state.message = action.payload.message;
       })
-      .addCase(deleteCourseType.rejected, (state, action) => {
+      .addCase(deleteSchool.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(CourseTypeStatus.pending, (state) => {
+      .addCase(SchoolStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
 
-      .addCase(CourseTypeStatus.fulfilled, (state, action) => {
-        const index = state.CourseType.findIndex(
+      .addCase(SchoolStatus.fulfilled, (state, action) => {
+        const index = state.School.findIndex(
           (enq) => enq._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.CourseType[index].status = action.payload.data.status;
+          state.School[index].status = action.payload.data.status;
         }
         state.loading = false;
         state.error = null;
         state.message = action.payload.message;
       })
-      .addCase(CourseTypeStatus.rejected, (state, action) => {
+      .addCase(SchoolStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
-export const { getclear } = CourseTypeSlice.actions;
-export default CourseTypeSlice.reducer;
+export default SchoolSlice.reducer;

@@ -70,6 +70,7 @@ export const ReligionStatus = createAsyncThunk(
     }
   }
 );
+
 const ReligionSlice = createSlice({
   name: "Religion",
   initialState: {
