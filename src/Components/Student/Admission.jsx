@@ -61,90 +61,138 @@ function Admission(_params) {
     }
   }, [message, error]);
 
-  const cols = [
-    { field: "code", header: "Code" },
-    { field: "name", header: "Name" },
-    { field: "category", header: "Category" },
-    { field: "quantity", header: "Quantity" },
-  ];
-
-  const exportColumns = cols.map((col) => ({
-    title: col.header,
-    dataKey: col.field,
-  }));
-
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
-  };
-
-  const exportPdf = () => {
-    import("jspdf").then((jsPDF) => {
-      import("jspdf-autotable").then(() => {
-        const doc = new jsPDF.default(0, 0);
-
-        doc.autoTable(exportColumns, products);
-        doc.save("products.pdf");
-      });
-    });
-  };
-
   const exportExcel = () => {
-    import("xlsx").then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(products);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
-      const excelBuffer = xlsx.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
+    import("xlsx")
+      .then((xlsx) => {
+        // Verify if xlsx was imported successfully
+        if (!xlsx) {
+          alert("Failed to load xlsx library");
+          return;
+        }
+        try {
+          // Check if 'enquiry2' is defined and has data
+          if (
+            !admission ||
+            !Array.isArray(admission) ||
+            admission.length === 0
+          ) {
+            alert("Enquiry data is not defined or is not an array or is empty");
+            return;
+          }
+
+          // Define the columns to export
+          const columnsToExport = [
+            "studentName",
+            "fatherName",
+            "motherName",
+            "dob",
+            "regdDate",
+            "mobileNo",
+            "altMobileNo",
+            "email",
+            "bloodGroup",
+            "gender",
+            "religion",
+            "studentAadharNo",
+            "studentQualification",
+            "nationality",
+            "caste",
+            "address1",
+            "address2",
+            "city",
+            "state",
+            "examCenter",
+            "foundationCourse",
+            "status",
+          ];
+
+          // Filter the data to include only the selected columns
+          const filteredData = admission.map((item, index) => {
+            const filteredItem = {
+              "Sr.No.": index + 1, // Add serial number
+            };
+            columnsToExport.forEach((col) => {
+              if (col === "dob") {
+                filteredItem[col] = moment(item[col]).format("DD/MM/YYYY");
+              } else if (col === "regdDate") {
+                filteredItem[col] = moment(item[col]).format("DD/MM/YYYY");
+              } else {
+                filteredItem[col] = item[col];
+              }
+            });
+            return filteredItem;
+          });
+
+          const worksheet = xlsx.utils.json_to_sheet(filteredData);
+
+          const workbook = {
+            Sheets: { "Admission List": worksheet },
+            SheetNames: ["Admission List"],
+          };
+
+          const excelBuffer = xlsx.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+          });
+
+          saveAsExcelFile(excelBuffer, "admissionlist");
+        } catch (error) {
+          console.error("Error creating Excel file:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error importing xlsx:", error);
       });
-
-      saveAsExcelFile(excelBuffer, "products");
-    });
   };
-
   const saveAsExcelFile = (buffer, fileName) => {
-    import("file-saver").then((module) => {
-      if (module && module.default) {
-        let EXCEL_TYPE =
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        let EXCEL_EXTENSION = ".xlsx";
-        const data = new Blob([buffer], {
-          type: EXCEL_TYPE,
-        });
+    import("file-saver")
+      .then((module) => {
+        if (module && module.default) {
+          const EXCEL_TYPE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+          const EXCEL_EXTENSION = ".xlsx";
+          const data = new Blob([buffer], {
+            type: EXCEL_TYPE,
+          });
 
-        module.default.saveAs(
-          data,
-          fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-        );
-      }
-    });
+          module.default.saveAs(
+            data,
+            fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
+          );
+        } else {
+          console.error("Failed to load file-saver module");
+        }
+      })
+      .catch((error) => {
+        console.error("Error importing file-saver:", error);
+      });
   };
 
   const header = (
     <div className="flex items-center justify-end gap-2">
-      <Button
+      {/* <Button
         type="button"
         icon={<FaFileCsv />}
         disabled={products}
         className="border-black w-10 h-10 rounded-full border-2"
         onClick={() => exportCSV(false)}
         data-pr-tooltip="CSV"
-      />
+      /> */}
       <Button
         type="button"
-        disabled={products}
         icon={<FaFileExcel color="#fff" />}
         className="bg-green-500 border-black border w-10 h-10 rounded-full "
         onClick={exportExcel}
         data-pr-tooltip="XLS"
       />
-      <Button
+      {/* <Button
         type="button"
         disabled={products}
         icon={<FaFilePdf color="#fff" />}
         className="bg-red-500 border-black border w-10 h-10 rounded-full "
         onClick={exportPdf}
         data-pr-tooltip="PDF"
-      />
+      /> */}
     </div>
   );
 
@@ -163,9 +211,11 @@ function Admission(_params) {
       </div>
     );
   };
+
   const indexTemplate = (_rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
+
   const imageTemplate = (rowData, { rowIndex }) => {
     return (
       <>
@@ -181,14 +231,17 @@ function Admission(_params) {
       </>
     );
   };
+
   return (
     <div className="relative">
-      <NavBar />
       <Toast ref={toast} />
       <Dialog
         header="Admission Form"
         position="top"
-        className="h-auto"
+        className="w-full h-full m-0 "
+        maximized={true}
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
+        headerClassName="px-6 py-3 border-b"
         visible={openModel}
         onHide={() => setOpenModel(false)}
       >
@@ -197,23 +250,28 @@ function Admission(_params) {
       <Dialog
         header="Enquiry Form"
         position="top"
-        className="h-auto"
+        className="w-full h-full m-0 "
+        maximized={true}
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
+        headerClassName="px-6 py-3 border-b"
         visible={openModel2}
         onHide={() => setOpenModel2(false)}
       >
         <EnquiryForm mode={"s"} />
       </Dialog>
-      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
-        <div className="flex justify-between">
-          <strong className="md:text-md lg:text-2xl">Student Admission List</strong>
+      <div className="md:m-3 p-3 border md:rounded-lg border-slate-400 shadow-slate-500 md:shadow-sm bg-white">
+        <div className="grid md:flex md:justify-between">
+          <strong className="text-lg py-2 md:text-md lg:text-2xl">
+            Student Admission List
+          </strong>
           <div className="flex gap-4">
             <Button
-            label="New Enquiry"
-            icon={<FaPlus />}
+              label="New Enquiry"
+              icon={<FaPlus />}
               className="flex items-center justify-center rounded-lg gap-2 text-sm p-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => setOpenModel2(true)}
-             />            
-              
+            />
+
             <Button
               label="New Admission"
               icon={<FaPlus />}
@@ -225,9 +283,9 @@ function Admission(_params) {
             />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <label className="text-sm">Registration Date</label>
+        <div className="grid lg:grid-cols-2 gap-3">
+          <div className="grid">
+            <label className="text-sm pt-3">Registration Date</label>
             <Calendar
               touchUI
               placeholder="DD/MM/YYYY"
@@ -236,17 +294,24 @@ function Admission(_params) {
             />
           </div>
 
-          <div className="flex gap-2 mt-5 ">
+          <div className="flex gap-2 mt-8 ">
             <Button
-              label="Filter"
-              icon={<FaFilter/>}
-              className="flex gap-2 bg-blue-500 text-white px-3 py2"
-            />
-            <Button label="Clear" icon={<FaRedo />} className="flex gap-2 bg-red-500 text-white px-3 py-2" />
+              icon={<FaFilter />}
+              className="flex gap-2 bg-blue-500 text-white px-3 py-3"
+            >
+              <span className="hidden md:block">Filter</span>
+            </Button>
+            <Button
+              icon={<FaRedo />}
+              className="flex gap-2 bg-red-500 text-white px-3 py-3"
+            >
+              <span className="hidden md:block">Clear</span>
+            </Button>
           </div>
         </div>
       </div>
-      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
+
+      <div className="relative bg-white md:rounded-lg border border-slate-400 shadow-slate-500 md:shadow-md md:m-4 p-2 overflow-hidden">
         <DataTable
           value={admission}
           size="small"
@@ -257,70 +322,70 @@ function Admission(_params) {
         >
           <Column
             field="index"
-          headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Sr."
             sortable
             body={indexTemplate}
           ></Column>
           <Column
             field="studentPhoto"
-             headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Photo"
             body={imageTemplate}
             sortable
           ></Column>
           <Column
             field="_id"
-            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Student Id"
             sortable
           ></Column>
           <Column
             field="userid"
-           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="User Id"
             sortable
           ></Column>
           <Column
             field="category"
- headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Password"
             sortable
           ></Column>
           <Column
             field="studentName"
-      headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Student Name"
             sortable
           ></Column>
           <Column
             field="fatherName"
-           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Father Name"
             sortable
           ></Column>
           <Column
             field="mobileNo"
-            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Mobile No."
             sortable
           ></Column>
           <Column
             field="examCenter"
-            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Exam Center"
             sortable
           ></Column>
           <Column
             field="regdDate"
-           headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Req. Date"
             body={(e) => moment(e).format("DD/MM/YYYY")}
             sortable
           ></Column>
           <Column
             field="status"
-            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Action"
             body={ActionbodyTemplate}
             sortable

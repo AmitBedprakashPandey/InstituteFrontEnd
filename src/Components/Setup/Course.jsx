@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCoursebyId, updateCourse } from "../../Redux/Slice/CourseSlice";
 import { Toast } from "primereact/toast";
 
-function Course(params) {
+function Course() {
   const [openModel, setOpenModel] = useState(false);
   const [selectedData, setSelectedData] = useState();
   const [mode, setMode] = useState("s");
@@ -36,6 +36,7 @@ function Course(params) {
   const show = (message) => {
     toast.current.show({ severity: "info", summary: message, life: 1000 });
   };
+  
   const showWarn = (error) => {
     toast.current.show({
       severity: "warn",
@@ -43,6 +44,7 @@ function Course(params) {
       life: 3000,
     });
   };
+
   useEffect(() => {
     if (message) {
       show(message);
@@ -63,6 +65,7 @@ function Course(params) {
     setFilters(_filters);
     setGlobalFilterValue(value);
   };
+
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -75,14 +78,17 @@ function Course(params) {
   useEffect(() => {
     dispatch(getCoursebyId(userid));
   }, [dispatch, userid]);
+
   const dt = useRef(null);
   const products = [];
+
   const cols = [
     { field: "code", header: "Code" },
     { field: "name", header: "Name" },
     { field: "category", header: "Category" },
     { field: "quantity", header: "Quantity" },
   ];
+
   const exportColumns = cols.map((col) => ({
     title: col.header,
     dataKey: col.field,
@@ -115,6 +121,7 @@ function Course(params) {
       saveAsExcelFile(excelBuffer, "products");
     });
   };
+
   const saveAsExcelFile = (buffer, fileName) => {
     import("file-saver").then((module) => {
       if (module && module.default) {
@@ -221,13 +228,16 @@ function Course(params) {
       </div>
     );
   };
+
   const indexTemplate = (rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
+
   return (
-    <div className="relative   bg-white">
+    <div className="relative bg-white">
       <NavBar />
       <Toast ref={toast} />
+      
       <Dialog
         header="Course Form"
         position="top"

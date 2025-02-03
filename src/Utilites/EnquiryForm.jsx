@@ -11,17 +11,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
-import {
-  createEnquiry,
-  updateEnquiry,
-} from "../Redux/Slice/EnquirySlice";
+import { createEnquiry, updateEnquiry } from "../Redux/Slice/EnquirySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Toast } from "primereact/toast";
 import { getCoursebyId } from "../Redux/Slice/CourseSlice";
 import { getStateAll } from "../Redux/Slice/StateSlice";
 import { getGenderAll } from "../Redux/Slice/GenderSlice";
 import { getReligionAll } from "../Redux/Slice/ReligionSlice";
-import { BiSave,BiUpload } from "react-icons/bi";
+import { BiSave, BiUpload } from "react-icons/bi";
 import moment from "moment/moment";
 function EnquiryForm({ mode, data }) {
   const [formData, setFormData] = useState();
@@ -58,13 +55,16 @@ function EnquiryForm({ mode, data }) {
     setSelectedData(
       course.filter((item) => item.courseName === formData?.course)
     );
-  }, [formData?.course,course]);
+  }, [formData?.course, course]);
   useLayoutEffect(() => {
     dispatch(getCoursebyId(userid));
     dispatch(getStateAll());
     dispatch(getGenderAll());
     dispatch(getReligionAll());
-  }, [dispatch,userid]);
+    if (mode === "u") {
+      setFormData(data);
+    }
+  }, [dispatch, userid]);
   useEffect(() => {
     if (message) {
       show(message);
@@ -72,10 +72,7 @@ function EnquiryForm({ mode, data }) {
     if (error) {
       showWarn(message);
     }
-    if (mode === "u") {
-      setFormData(data);
-    }
-  }, [message, error, data,mode]);
+  }, [message, error]);
 
   const handleImageUpload = (event) => {
     return new Promise((resolve, reject) => {
@@ -192,7 +189,7 @@ function EnquiryForm({ mode, data }) {
     <div className="relative">
       <Toast ref={toast} />
 
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 lg:place-content-center w-full gap-5 mt-5">
         <FloatLabel>
           <InputText
             id="StudentName"
@@ -200,7 +197,7 @@ function EnquiryForm({ mode, data }) {
             value={formData?.studentName}
             onChange={formDatahandler}
             autoFocus
-            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
+            className="border border-slate-400  h-12 pl-3 w-full"
           />
           <label htmlFor="StudentName">
             Student Name <span className="text-red-500">*</span>
@@ -213,7 +210,7 @@ function EnquiryForm({ mode, data }) {
             value={formData?.fatherName}
             onChange={formDatahandler}
             fatherName
-            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
+            className="border border-slate-400  h-12 pl-3 w-full"
           />
           <label htmlFor="fatherName">
             Father Name <span className="text-red-500">*</span>
@@ -226,7 +223,7 @@ function EnquiryForm({ mode, data }) {
             autoComplete="motheer name"
             value={formData?.motherName}
             onChange={formDatahandler}
-            className="border border-slate-400 md:h-10 h-12 pl-3 w-64"
+            className="border border-slate-400  h-12 pl-3 w-full"
           />
           <label for="mothername">Mother Name</label>
         </FloatLabel>
@@ -241,17 +238,17 @@ function EnquiryForm({ mode, data }) {
             filterPlaceholder="Select a Course"
             filterInput
             filter
-            className="border border-slate-400 w-64 md:h-10 h-12"
+            className="border border-slate-400 w-full h-12"
           />
           <label htmlFor="dd-city">
             Select a Course <span className="text-red-500">*</span>
           </label>
         </FloatLabel>
       </div>
-      <div className="py-3">
+      <div className="py-3 w-full">
         <DataTable
           value={selectedData}
-          className="border shadow-gray-500 shadow-sm"
+          className="border shadow-gray-500 shadow-sm w-full"
           stripedRows
           showGridlines
         >
@@ -293,31 +290,33 @@ function EnquiryForm({ mode, data }) {
           ></Column>
         </DataTable>
       </div>
-      <div className="flex justify-center items-center gap-5 lg:mt-5 md:mt-5">
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-5 lg:place-content-center w-full gap-10  mt-5">
         <FloatLabel>
           <Calendar
             id="birth_date"
             inputClassName="pl-3 "
-            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
+            className="border border-slate-400 rounded-md  h-12 w-full"
             dateFormat="dd/mm/yy"
             name="dob"
             showIcon
-            value={moment(FormData?.dob).format("DD/MM/YYYY")}
+            value={new Date(formData?.dob)}
             onChange={formDatahandler}
           />
           <label htmlFor="birth_date">
-            Date Of Birth <span className="text-red-500">*</span>
+            Date Of Birth<span className="text-red-500">*</span>
           </label>
         </FloatLabel>
         <FloatLabel>
           <Calendar
             id="enquiryDate"
             name="enquiryDate"
-            value={moment(FormData?.enquiryDate).format("DD/MM/YYYY")}
+            dateFormat="dd/mm/yy"
+            value={new Date(formData?.enquiryDate)}
             onChange={formDatahandler}
             inputClassName="pl-3"
             showIcon
-            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
+            className="border border-slate-400 rounded-md  h-12 w-full"
           />
           <label htmlFor="fathername">Enquiry Date</label>
         </FloatLabel>
@@ -330,7 +329,7 @@ function EnquiryForm({ mode, data }) {
             onChange={(e) => formDatahandler(e.originalEvent)}
             maxLength={10}
             inputClassName="pl-3"
-            className="border border-slate-400 rounded-md md:h-10 h-12 w-64"
+            className="border border-slate-400 rounded-md  h-12 w-full"
           />
           <label for="mobileNo">
             Mobile No. <span className="text-red-500">*</span>
@@ -345,16 +344,15 @@ function EnquiryForm({ mode, data }) {
             useGrouping={false}
             maxLength={10}
             inputClassName="pl-3"
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64"
+            className="border rounded-md border-slate-400  h-12 w-full"
           />
           <label for="altMobile">Alternate Mobile No. </label>
         </FloatLabel>
-      </div>
-      <div className="flex justify-center items-center gap-5 lg:mt-7 md:mt-5">
+
         <FloatLabel>
           <InputText
             id="email"
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
             name="email"
             autoComplete="email"
             value={formData?.email}
@@ -374,7 +372,7 @@ function EnquiryForm({ mode, data }) {
             optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
+            className="border rounded-md border-slate-400 w-full  h-12"
           />
           <label htmlFor="gender">Gender</label>
         </FloatLabel>
@@ -390,13 +388,13 @@ function EnquiryForm({ mode, data }) {
             optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
+            className="border rounded-md border-slate-400 w-full  h-12"
           />
           <label htmlFor="religion">Religion</label>
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
             id="caste"
             name="caste"
             autoComplete="caste"
@@ -405,15 +403,14 @@ function EnquiryForm({ mode, data }) {
           />
           <label htmlFor="caste">Caste</label>
         </FloatLabel>
-      </div>
-      <div className="flex justify-center items-center gap-5 lg:mt-7 md:mt-5">
+
         <FloatLabel>
           <InputText
             id="address1"
             name="address1"
             value={formData?.address1}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
           />
           <label htmlFor="address1">Address-1</label>
         </FloatLabel>
@@ -423,7 +420,7 @@ function EnquiryForm({ mode, data }) {
             name="address2"
             value={formData?.address2}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
           />
           <label htmlFor="address2">Address-2</label>
         </FloatLabel>
@@ -433,7 +430,7 @@ function EnquiryForm({ mode, data }) {
             name="city"
             value={formData?.city}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
           />
           <label for="mothername">City</label>
         </FloatLabel>
@@ -448,24 +445,23 @@ function EnquiryForm({ mode, data }) {
             optionValue="state"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-64 md:h-10 h-12"
+            className="border rounded-md border-slate-400 w-full  h-12"
           />
           <label htmlFor="state">State</label>
         </FloatLabel>
-      </div>
-      <div className="flex justify-start items-center gap-5 lg:mt-7 md:mt-5">
+
         <FloatLabel>
           <InputText
             id="enquiryBy"
             name="enquiryBy"
             value={formData?.enquiryBy}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400 md:h-10 h-12 w-64 pl-3"
+            className="border rounded-md border-slate-400  h-12 w-full pl-3"
           />
           <label htmlFor="enquiryBy">EnquiryBy</label>
         </FloatLabel>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-5">
         <span>
           <label htmlFor="StudentName">Student Photo</label>
           <FileUpload
@@ -473,7 +469,7 @@ function EnquiryForm({ mode, data }) {
             accept="image/*"
             id="StudentName"
             onSelect={studentImageHandler}
-            className="border md:h-10 h-12"
+            className=" h-12"
           />
 
           <Image
@@ -489,7 +485,7 @@ function EnquiryForm({ mode, data }) {
             onSelect={fatherImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border rounded-md border-slate-400 md:h-10 h-12"
+            className=" h-12"
           />
           <Image
             src={formData?.fatherPhoto}
@@ -504,7 +500,7 @@ function EnquiryForm({ mode, data }) {
             onSelect={motherImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border md:h-10 h-12"
+            className=" h-12"
           />
           <Image
             src={formData?.motherPhoto}
@@ -519,7 +515,7 @@ function EnquiryForm({ mode, data }) {
             onSelect={certidicateImageHandler}
             accept="image/*"
             id="StudentName"
-            className="border md:h-10 h-12"
+            className=" h-12"
           />
           <Image
             src={formData?.certificate}
@@ -528,7 +524,7 @@ function EnquiryForm({ mode, data }) {
           />
         </span>
       </div>
-      <div className="absolute bottom-0 right-0 ">
+      <div className="flex justify-end mt-5">
         {mode === "s" ? (
           <Button
             onClick={confirm1}
@@ -542,13 +538,14 @@ function EnquiryForm({ mode, data }) {
                 : true
             }
             label="Save"
-              icon={<BiSave size={20} />}
+            icon={<BiSave size={20} />}
             className="bg-green-500 hover:bg-green-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         ) : (
           <Button
+            label="Update"
             onClick={confirm2}
-             icon={<BiUpload size={20} />}
+            icon={<BiUpload size={20} />}
             className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 text-white py-3 px-10"
           />
         )}

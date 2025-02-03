@@ -1,10 +1,11 @@
 @page {
+  padding: 15px;
+}
+
+@media print {
+  @page {
     padding: 15px;
   }
-@media print {
-    @page {
-      padding: 15px;
-    }
 }
 
 
@@ -19,4 +20,37 @@
 
 .p-menuitem-link {
   color: black;
+}
+
+
+.panelmenu {
+
+  .p-sidebar-icons > .p-sidebar-icon{
+    @apply text-white
+  }
+
+  .p-panelmenu-content {
+    @apply p-0
+  }
+
+  .p-panelmenu-header-content>.p-panelmenu-header-link {
+    @apply bg-blue-500 border-b border-white/50
+  }
+
+  .p-menuitem-text,
+  .p-menuitem-icon, .p-submenu-icon {
+    @apply text-white
+  }
+
+  .p-menuitem {
+    @apply bg-blue-400
+  }
+
+  .p-menuitem-link {
+    @apply py-5
+  }
+
+  .p-menuitem-content {
+    @apply hover:bg-blue-800 py-0
+  }
 }

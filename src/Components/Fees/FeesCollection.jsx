@@ -5,7 +5,13 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { useLayoutEffect, useState } from "react";
-import { BiPlus, BiPrinter ,BiFilter,BiRedo, BiFilterAlt} from "react-icons/bi";
+import {
+  BiPlus,
+  BiPrinter,
+  BiFilter,
+  BiRedo,
+  BiFilterAlt,
+} from "react-icons/bi";
 import { FaPenToSquare } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { getFeesbyId } from "../../Redux/Slice/FeesSlice";
@@ -25,34 +31,38 @@ export default function FeesCollection() {
   const { userid } = useSelector((state) => state.UserAuth);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   useLayoutEffect(() => {
     dispatch(getFeesbyId(userid));
     dispatch(getAdmissionbyId(userid));
   }, [dispatch]);
+
   const dateDatahandler = (e) => {
     setDateData({ ...dateData, [e.target.name]: e.target.value });
   };
+
   const dateFilterhandler = () => {
     console.log(dateData);
   };
   const indexTemplate = (rowData, { rowIndex }) => {
     return rowIndex + 1;
   };
-  
-  const print=(data)=>{
-    const student = admission.filter((item)=>item.studentName === data.studentname)
-    console.log(student);
-    navigate('/account/print',{state:{student,fees:data}});
 
-  }
+  const print = (data) => {
+    const student = admission.filter(
+      (item) => item.studentName === data.studentname
+    );
+    console.log(student);
+    navigate("/account/print", { state: { student, fees: data } });
+  };
 
   const ActionbodyTemplate = (rowData) => {
     return (
       <div className="flex items-center justify-center gap-2">
         <Button
           label={<BiPrinter size={20} />}
-          onClick={()=>print(rowData)}
+          onClick={() => print(rowData)}
           className="text-blue-500 p-2"
         />
 
@@ -71,17 +81,20 @@ export default function FeesCollection() {
 
   return (
     <>
-      <NavBar />
       <Dialog
         header="Fees Collection"
-        visible={openModel}
         position="top"
+        className="w-full h-full m-0 "
+        maximized={true}
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
+        headerClassName="px-6 py-3 border-b"
+        visible={openModel}
         onHide={() => setopenModel(false)}
         style={{ width: "50vw" }}
       >
         <FeesForm mode={mode} data={selectedData} />
       </Dialog>
-      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
+      <div className="md:m-3 p-3 border md:rounded-lg border-slate-400 shadow-slate-500 md:shadow-sm bg-white">
         <div className="flex justify-between">
           <strong className="">Fees Collections</strong>
           <div>
@@ -98,8 +111,8 @@ export default function FeesCollection() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+          <div className="grid">
             <label>From Date</label>
             <Calendar
               touchUI
@@ -113,7 +126,7 @@ export default function FeesCollection() {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="grid">
             <label>To Date</label>
             <Calendar
               touchUI
@@ -127,7 +140,7 @@ export default function FeesCollection() {
             />
           </div>
 
-          <div className="flex gap-2 mt-5">
+          <div className="flex gap-2 md:mt-5">
             <Button
               label="Filter"
               icon={<BiFilterAlt size={20} />}
@@ -137,36 +150,79 @@ export default function FeesCollection() {
             />
             <Button
               label="Clear"
-              icon={<BiRedo size={20}/>}
+              icon={<BiRedo size={20} />}
               onClick={() => setDateData({ fromDate: null, endDate: null })}
               className="bg-red-500 hover:bg-red-600 duration-200 flex gap-3 text-white p-3"
             />
           </div>
         </div>
       </div>
-      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
+      <div className="relative bg-white md:rounded-lg border border-slate-400 shadow-slate-500 md:shadow-md md:m-4 p-2 overflow-hidden">
         <DataTable value={Fees} size="small" stripedRows showGridlines>
-          <Column field="code" header="Sr. No." body={indexTemplate}></Column>
+          <Column
+            field="code"
+            header="Sr."
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            body={indexTemplate}
+          ></Column>
           <Column
             field="date"
             header="Date"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             sortable
             body={(e) => moment(e?.date).format("DD/MM/YYYY")}
           ></Column>
-          <Column field="studentname" header="Student Name" sortable></Column>
-          <Column field="paymentMode" header="Payment Mode" sortable></Column>
-          <Column field="dueAmt" header="Due Amt" sortable></Column>
-          <Column field="dicount" header="Discount" sortable></Column>
-          <Column field="paidAmt" header="Paid Amount" sortable></Column>
+          <Column
+            field="studentname"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Student Name"
+            sortable
+          ></Column>
+          <Column
+            field="paymentMode"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Payment Mode"
+            sortable
+          ></Column>
+          <Column
+            field="dueAmt"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Due Amt"
+            sortable
+          ></Column>
+          <Column
+            field="dicount"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Discount"
+            sortable
+          ></Column>
+          <Column
+            field="paidAmt"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Paid Amount"
+            sortable
+          ></Column>
           <Column
             field="ApayDueAmt"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="After Pay Due Amt."
             sortable
           ></Column>
-          <Column field="collecteBy" header="Collected By" sortable></Column>
-          <Column field="remark" header="Remark" sortable></Column>
+          <Column
+            field="collecteBy"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Collected By"
+            sortable
+          ></Column>
           <Column
             field="remark"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
+            header="Remark"
+            sortable
+          ></Column>
+          <Column
+            field="remark"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Action"
             body={ActionbodyTemplate}
           ></Column>

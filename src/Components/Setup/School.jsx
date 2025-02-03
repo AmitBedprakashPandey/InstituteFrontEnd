@@ -3,16 +3,17 @@ import { Menu } from "primereact/menu";
 import { PanelMenu } from "primereact/panelmenu";
 import { useState } from "react";
 import SchoolForm from "../../Utilites/SchoolForm";
-import { FaSchool ,FaBuildingColumns} from "react-icons/fa6";
+import { FaSchool, FaBuildingColumns } from "react-icons/fa6";
 import CourseType from "./tab/CourseType";
+import { Outlet, useNavigate } from "react-router-dom";
 export default function School(params) {
   const [selectedItem, setSelectedItem] = useState(null);
-
+  const navigate = useNavigate();
   const items = [
     {
       label: `School Details`,
-      icon:<FaSchool size={20} className="mr-3"/>,
-      command: () => setSelectedItem("School Details"),
+      icon: <FaSchool size={20} className="mr-3" />,
+      command: () => setSelectedItem("school"),
     },
     // {
     //   label: "Common Data",
@@ -29,18 +30,18 @@ export default function School(params) {
     // },
     {
       label: "Account",
-      icon:<FaBuildingColumns size={20} className="mr-3"/>,
+      icon: <FaBuildingColumns size={20} className="mr-3" />,
       items: [
         {
           label: "- Bank Details",
-          command: () => setSelectedItem("Bank Details"),
+          command: () => setSelectedItem("bank"),
         },
       ],
     },
   ];
   const renderContent = () => {
     switch (selectedItem) {
-      case "School Details":
+      case "school":
         return (
           <div className="flex justify-center">
             <SchoolForm />
@@ -53,10 +54,8 @@ export default function School(params) {
           </div>
         );
       case "Payment Mode":
-        return <div className="p-5">
-       
-      </div>;
-      case "Bank Details":
+        return <div className="p-5"></div>;
+      case "bank":
         return <div>Bank Details Content</div>;
       default:
         return <div>Select a menu item to see the content.</div>;
@@ -65,9 +64,8 @@ export default function School(params) {
 
   return (
     <>
-      <NavBar />
-      <div className="flex gap-3">
-        <div className="w-96 bg-white m-3 h-[800px] rounded-md sticky top-16 shadow-gray-400 shadow-lg py-2">
+      <div className="flex gap-2 h-full">
+        <div className="w-[250px] bg-white sticky shadow-gray-400 shadow-lg">
           <PanelMenu
             model={items}
             className="w-full"
@@ -90,7 +88,7 @@ export default function School(params) {
             }}
           />
         </div>
-        <div className="w-full bg-white m-3 h-[800px] rounded-md sticky top-16 shadow-gray-400 shadow-lg py-2">
+        <div className="flex-1 bg-white shadow-gray-400 shadow-lg p-2">
           {renderContent()}
         </div>
       </div>

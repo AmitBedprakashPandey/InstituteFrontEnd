@@ -11,26 +11,27 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.UserAuth);
-  const { School } = useSelector((state) => state.School);
+
   const formDataHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const onLogin = () => {
     dispatch(userlogin(formData)).then(() => {
       if (localStorage.getItem("userToken")) {
-        
-          navigate("/school/form");
-        
+        navigate("/wizard");
       }
     });
   };
+
   useEffect(() => {
     if (localStorage.getItem("userToken")) {
       navigate("/");
-    }else{
+    } else {
       navigate("/login");
     }
   }, [navigate]);
+
   return (
     <>
       <div className="absolute top-0 bottom-0 left-0 right-0 flex min-h-full flex-1 flex-col justify-center px-6 py-0 lg:px-8 z-50 bg-white">
@@ -40,7 +41,7 @@ export default function LoginForm() {
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="h-14">
+          <div className="h-14 duration-300">
             {error && (
               <Message text={error} severity="error" className="w-full" />
             )}

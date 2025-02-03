@@ -1,33 +1,38 @@
-import { Dropdown } from "primereact/dropdown";
-import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
-import { Calendar } from "primereact/calendar";
-import { InputNumber } from "primereact/inputnumber";
-import { FileUpload } from "primereact/fileupload";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { Image } from "primereact/image";
-import { Button } from "primereact/button";
-import { confirmDialog } from "primereact/confirmdialog";
 import Compressor from "compressorjs";
+import { Button } from "primereact/button";
+import { Calendar } from "primereact/calendar";
+import { confirmDialog } from "primereact/confirmdialog";
+import { Dropdown } from "primereact/dropdown";
+import { FileUpload } from "primereact/fileupload";
+import { FloatLabel } from "primereact/floatlabel";
+import { Image } from "primereact/image";
+import { InputNumber } from "primereact/inputnumber";
+import { InputText } from "primereact/inputtext";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { BiSave, BiUpload } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createAdmission,
-  updateAdmission
+  updateAdmission,
 } from "../Redux/Slice/AdmissionSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { getStateAll } from "../Redux/Slice/StateSlice";
+import { getfoundationAll } from "../Redux/Slice/FoundationSlice";
 import { getGenderAll } from "../Redux/Slice/GenderSlice";
 import { getReligionAll } from "../Redux/Slice/ReligionSlice";
-import { getfoundationAll } from "../Redux/Slice/FoundationSlice";
-import { BiSave, BiUpload } from "react-icons/bi";
+import { getStateAll } from "../Redux/Slice/StateSlice";
+import { getCoursebyId } from "../Redux/Slice/CourseSlice";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 function AdmissionForm({ mode, data }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState();
-
+  const [selectedData, setSelectedData] = useState();
+  const { loading } = useSelector((state) => state.Admission);
   const { userid } = useSelector((state) => state.UserAuth);
   const { State } = useSelector((state) => state.State);
   const { Gender } = useSelector((state) => state.Gender);
   const { Religion } = useSelector((state) => state.Religion);
   const { foundation } = useSelector((state) => state.Foundation);
+  const { course } = useSelector((state) => state.Course);
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -35,13 +40,21 @@ function AdmissionForm({ mode, data }) {
       userid: userid,
     });
   };
-useLayoutEffect(()=>{
-  dispatch(getStateAll());
-  dispatch(getGenderAll());
-  dispatch(getReligionAll());
-  dispatch(getfoundationAll())
-},[dispatch])
-  useEffect(() => {    
+  useLayoutEffect(() => {
+    dispatch(getCoursebyId(userid));
+    dispatch(getStateAll());
+    dispatch(getGenderAll());
+    dispatch(getReligionAll());
+    dispatch(getfoundationAll());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setSelectedData(
+      course?.filter((item) => item.courseName === formData?.course)
+    );
+  }, [formData?.course, course]);
+
+  useEffect(() => {
     if (mode === "u") {
       setFormData(data);
     }
@@ -171,7 +184,6 @@ useLayoutEffect(()=>{
     }
   };
 
-
   const onSave = () => {
     dispatch(createAdmission(formData));
   };
@@ -206,273 +218,372 @@ useLayoutEffect(()=>{
 
   return (
     <div className="relative">
+      <div className="grid md:grid-cols-3 lg:grid-cols-4 w-full gap-3">
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="StudentName"
+              className="border border-slate-400 h-12 pl-3  w-full"
+              name="studentName"
+              value={formData?.studentName}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="StudentName">
+              Student Name <span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="fathername"
+              className="border border-slate-400 h-12 pl-3 w-full"
+              name="fatherName"
+              value={formData?.fatherName}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="fathername">
+              Husband/Father Name <span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="mothername"
+              className="border border-slate-400 h-12 pl-3  w-full"
+              name="motherName"
+              value={formData?.motherName}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="mothername">Mother Name</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Dropdown
+              name="course"
+              value={formData?.course}
+              onChange={formDataHandler}
+              options={course}
+              optionLabel="courseName"
+              optionValue="courseName"
+              filterPlaceholder="Select a Course"
+              filterInput
+              filter
+              className="border border-slate-400 w-full h-12"
+            />
+            <label htmlFor="dd-city">
+              Select a Course <span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+      </div>
+      <div className="py-3 w-full">
+        <DataTable
+          value={selectedData}
+          className="border shadow-gray-500 shadow-sm w-full"
+          stripedRows
+          showGridlines
+        >
+          <Column
+            field="courseType"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course types"
+          ></Column>
+          <Column
+            field="courseName"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course Name"
+          ></Column>
+          <Column
+            field="certifiedAuthority"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Certified Authority"
+          ></Column>
+          <Column
+            field="examFee"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Exam Fee"
+          ></Column>
+          <Column
+            field="courseFee"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Course Fee"
+          ></Column>
+          <Column
+            field="courseDuration"
+            bodyClassName="md:text-xs text-nowrap"
+            headerClassName="bg-blue-800 text-white border md:text-xs text-nowrap"
+            header="Donation"
+          ></Column>
+        </DataTable>
+      </div>
 
-      <div className="flex justify-center items-center gap-5 mt-5">
-        <FloatLabel>
-          <InputText
-            id="StudentName"
-            className="border border-slate-400 h-12 pl-3 w-64"
-            name="studentName"
-            value={formData?.studentName}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="StudentName">
-            Student Name <span className="text-red-500">*</span>
-          </label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            id="fathername"
-            className="border border-slate-400 h-12 pl-3 w-64"
-            name="fatherName"
-            value={formData?.fatherName}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="fathername">
-            Husband/Father Name <span className="text-red-500">*</span>
-          </label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            id="mothername"
-            className="border border-slate-400 h-12 pl-3 w-64"
-            name="motherName"
-            value={formData?.motherName}
-            onChange={formDataHandler}
-          />
-          <label for="mothername">Mother Name</label>
-        </FloatLabel>
-        <FloatLabel>
-          <Calendar
-            inputId="dd-dob"
-            className="border border-slate-400 w-64 h-12 rounded-md"
-            inputClassName="pl-3"
-            name="dob"
-            dateFormat="dd/mm/yy"
-            placeholder="dd/mm/yy"
-            value={new Date(formData?.dob)}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="dd-dob">
-            Date of Birth dd/mm/yy<span className="text-red-500">*</span>
-          </label>
-        </FloatLabel>
+      <div className="grid md:grid-cols-3 lg:grid-cols-4 w-full gap-3 mt-5">
+        <div className="pt-5">
+          <FloatLabel>
+            <Calendar
+              inputId="dd-dob"
+              className="border border-slate-400  w-full h-12 rounded-md"
+              inputClassName="pl-3"
+              name="dob"
+              dateFormat="dd/mm/yy"
+              placeholder="dd/mm/yy"
+              value={new Date(formData?.dob)}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="dd-dob">
+              Date of Birth dd/mm/yy<span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Calendar
+              inputId="regdate"
+              inputClassName="pl-3 "
+              className="border border-slate-400 rounded-md  h-12  w-full"
+              dateFormat="dd/mm/yy"
+              placeholder="dd/mm/yy"
+              name="regdDate"
+              value={new Date(formData?.regdDate)}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="regdate">
+              Regd Date<span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputNumber
+              id="mobileNo"
+              useGrouping={false}
+              maxLength={10}
+              inputClassName="pl-3"
+              name="mobileNo"
+              value={formData?.mobileNo}
+              onChange={(e) => formDataHandler(e.originalEvent)}
+              className="border border-slate-400 rounded-md h-12  w-full"
+            />
+            <label htmlFor="mobileNo">
+              Mobile No. <span className="text-red-500">*</span>
+            </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputNumber
+              id="altMobileNo"
+              useGrouping={false}
+              maxLength={10}
+              inputClassName="pl-3"
+              name="altMobileNo"
+              value={formData?.altMobileNo}
+              onChange={(e) => formDataHandler(e.originalEvent)}
+              className="border border-slate-400 rounded-md h-12  w-full"
+            />
+            <label htmlFor="altMobileNo">Alternate Mobile No. </label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="email"
+              className="border border-slate-400 h-12  w-full pl-3"
+              name="email"
+              value={formData?.email}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="email">Email</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="bloodGroup"
+              className="border border-slate-400 h-12  w-full pl-3"
+              name="bloodGroup"
+              value={formData?.bloodGroup}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="bloodGroup">Blood Group</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Dropdown
+              id="gender"
+              name="gender"
+              value={formData?.gender}
+              onChange={formDataHandler}
+              options={Gender}
+              optionLabel="gender"
+              optionValue="gender"
+              filterPlaceholder="Select a Course"
+              filter
+              className="border border-slate-400  w-full"
+            />
+            <label htmlFor="gender">Gender</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Dropdown
+              id="religion"
+              name="religion"
+              value={formData?.religion}
+              onChange={formDataHandler}
+              options={Religion}
+              optionLabel="religion"
+              optionValue="religion"
+              filterPlaceholder="Select a Course"
+              filter
+              className="border border-slate-400  w-full"
+            />
+            <label htmlFor="religion">Religion</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="studentAadharNo"
+              name="studentAadharNo"
+              value={formData?.studentAadharNo}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="studentAadharNo">Student Aadhar No.</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="studentQualification"
+              name="studentQualification"
+              value={formData?.studentQualification}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="studentQualification">Student Qualification</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="nationality"
+              name="nationality"
+              value={formData?.nationality}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="nationality">Nationality</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="caste"
+              name="caste"
+              value={formData?.caste}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="caste">Caste</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="address1"
+              name="address1"
+              value={formData?.address1}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="address1">Address-1</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="address2"
+              name="address2"
+              value={formData?.address2}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="address2">Address-2</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              className="border border-slate-400 h-12  w-full pl-3"
+              id="city"
+              name="city"
+              value={formData?.city}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="city">City</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Dropdown
+              id="state"
+              name="state"
+              value={formData?.state}
+              onChange={formDataHandler}
+              options={State}
+              optionLabel="state"
+              optionValue="state"
+              filterPlaceholder="Select a Course"
+              filter
+              className="border border-slate-400  w-full"
+            />
+            <label htmlFor="state">State</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <InputText
+              id="examCenter"
+              className="border border-slate-400 h-12  w-full pl-3"
+              name="examCenter"
+              value={formData?.examCenter}
+              onChange={formDataHandler}
+            />
+            <label htmlFor="examCenter">Exam Center</label>
+          </FloatLabel>
+        </div>
+        <div className="pt-5">
+          <FloatLabel>
+            <Dropdown
+              id="foundationCourse"
+              name="foundationCourse"
+              value={formData?.foundationCourse}
+              onChange={formDataHandler}
+              options={foundation}
+              optionLabel="foundation"
+              optionValue="foundation"
+              filterPlaceholder="Select a Course"
+              filter
+              className="border border-slate-400  w-full"
+            />
+            <label htmlFor="foundationCourse">Foundation Course</label>
+          </FloatLabel>
+        </div>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-7">
-        <FloatLabel>
-          <Calendar
-            inputId="regdate"
-            inputClassName="pl-3 "
-            className="border border-slate-400 rounded-md  h-12 w-64"
-            dateFormat="dd/mm/yy"
-            placeholder="dd/mm/yy"
-            name="regdDate"
-            value={new Date(formData?.regdDate)}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="regdate">
-            Regd Date<span className="text-red-500">*</span>
-          </label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputNumber
-            id="mobileNo"
-            useGrouping={false}
-            maxLength={10}
-            inputClassName="pl-3"
-            name="mobileNo"
-            value={formData?.mobileNo}
-            onChange={(e) => formDataHandler(e.originalEvent)}
-            className="border border-slate-400 rounded-md h-12 w-64"
-          />
-          <label for="mobileNo">
-            Mobile No. <span className="text-red-500">*</span>
-          </label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputNumber
-            id="altMobileNo"
-            useGrouping={false}
-            maxLength={10}
-            inputClassName="pl-3"
-            name="altMobileNo"
-            value={formData?.altMobileNo}
-            onChange={(e) => formDataHandler(e.originalEvent)}
-            className="border border-slate-400 rounded-md h-12 w-64"
-          />
-          <label for="altMobileNo">Alternate Mobile No. </label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            id="email"
-            className="border border-slate-400 h-12 w-64 pl-3"
-            name="email"
-            value={formData?.email}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="email">Email</label>
-        </FloatLabel>
-      </div>
-      <div className="flex justify-center items-center gap-5 mt-7">
-        <FloatLabel>
-          <InputText
-            id="bloodGroup"
-            className="border border-slate-400 h-12 w-64 pl-3"
-            name="bloodGroup"
-            value={formData?.bloodGroup}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="bloodGroup">Blood Group</label>
-        </FloatLabel>
-        <FloatLabel>
-          <Dropdown
-            id="gender"
-            name="gender"
-            value={formData?.gender}
-            onChange={formDataHandler}
-            options={Gender}
-            optionLabel="gender"
-            optionValue="gender"
-            filterPlaceholder="Select a Course"
-            filter
-            className="border border-slate-400 w-64"
-          />
-          <label htmlFor="gender">Gender</label>
-        </FloatLabel>
-        <FloatLabel>
-          <Dropdown
-            id="religion"
-            name="religion"
-            value={formData?.religion}
-            onChange={formDataHandler}
-            options={Religion}
-            optionLabel="religion"
-            optionValue="religion"
-            filterPlaceholder="Select a Course"
-            filter
-            className="border border-slate-400 w-64"
-          />
-          <label htmlFor="fathername">Religion</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="studentAadharNo"
-            name="studentAadharNo"
-            value={formData?.studentAadharNo}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="studentAadharNo">Student Aadhar No.</label>
-        </FloatLabel>
-      </div>
-      <div className="flex justify-center items-center gap-5 mt-7">
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="studentQualification"
-            name="studentQualification"
-            value={formData?.studentQualification}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="studentQualification">Student Qualification</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="nationality"
-            name="nationality"
-            value={formData?.nationality}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="nationality">Nationality</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="caste"
-            name="caste"
-            value={formData?.caste}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="caste">Caste</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="address1"
-            name="address1"
-            value={formData?.address1}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="address1">Address-1</label>
-        </FloatLabel>
-      </div>
-      <div className="flex justify-start items-center gap-5 mt-7">
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="address2"
-            name="address2"
-            value={formData?.address2}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="address2">Address-2</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            className="border border-slate-400 h-12 w-64 pl-3"
-            id="city"
-            name="city"
-            value={formData?.city}
-            onChange={formDataHandler}
-          />
-          <label for="city">City</label>
-        </FloatLabel>
-        <FloatLabel>
-          <Dropdown
-            id="state"
-            name="state"
-            value={formData?.state}
-            onChange={formDataHandler}
-            options={State}
-            optionLabel="state"
-            optionValue="state"            
-            filterPlaceholder="Select a Course"
-            filter
-            className="border border-slate-400 w-64"
-          />
-          <label htmlFor="state">State</label>
-        </FloatLabel>
-        <FloatLabel>
-          <InputText
-            id="examCenter"
-            className="border border-slate-400 h-12 w-64 pl-3"
-            name="examCenter"
-            value={formData?.examCenter}
-            onChange={formDataHandler}
-          />
-          <label htmlFor="examCenter">Exam Center</label>
-        </FloatLabel>
-      </div>
-      <div className="flex justify-start items-center gap-5 mt-7">
-        <FloatLabel>
-          <Dropdown
-            id="foundationCourse"
-            name="foundationCourse"
-            value={formData?.foundationCourse}
-            onChange={formDataHandler}
-            options={foundation}
-            optionLabel="foundation"
-            optionValue="foundation"
-            filterPlaceholder="Select a Course"
-            filter
-            className="border border-slate-400 w-64"
-          />
-          <label htmlFor="foundationCourse">Foundation Course</label>
-        </FloatLabel>
-      </div>
-      <div className="flex flex-col items-center gap-5 mt-7">
-        <div className="grid lg:grid-cols-8 md:grid-cols-4 g gap-3">
+
+      <div className="gird w-full gap-5 mt-7">
+        <div className="grid grid-cols-2  md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-8 gap-3">
           <span>
             <label htmlFor="StudentName">Student Photo</label>
             <FileUpload
@@ -510,7 +621,7 @@ useLayoutEffect(()=>{
               onSelect={motherImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.motherPhoto}
@@ -525,7 +636,7 @@ useLayoutEffect(()=>{
               onSelect={certidicateImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.certificate}
@@ -541,7 +652,7 @@ useLayoutEffect(()=>{
               onSelect={certidicate1ImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.certificate1}
@@ -556,7 +667,7 @@ useLayoutEffect(()=>{
               onSelect={certidicate2ImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.certificate2}
@@ -571,7 +682,7 @@ useLayoutEffect(()=>{
               onSelect={certidicate3ImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.certificate3}
@@ -586,7 +697,7 @@ useLayoutEffect(()=>{
               onSelect={certidicate4ImageHandler}
               accept="image/*"
               id="StudentName"
-              className="border h-12"
+              className=" h-12"
             />
             <Image
               src={formData?.certificate4}
@@ -596,6 +707,7 @@ useLayoutEffect(()=>{
           </span>
         </div>
       </div>
+      
       <div className="mt-5 flex justify-end">
         {mode === "s" ? (
           <Button
@@ -604,21 +716,25 @@ useLayoutEffect(()=>{
               formData?.fatherName &&
               formData?.dob &&
               formData?.regdDate &&
-              formData?.mobileNo
+              formData?.mobileNo &&
+              formData?.course
                 ? false
                 : true
             }
             onClick={confirm1}
+            loading={loading}
             label="Save"
             icon={<BiSave size={20} />}
-            className="bg-green-500 hover:bg-green-600 duration-200 flex gap-3 text-white py-3 px-10"
+            className="bg-green-500 hover:bg-green-600 duration-200 flex gap-3 text-white py-5 px-24"
           />
         ) : (
           <Button
             onClick={confirm2}
+            loading={loading}
+            disabled={loading}
             label="Update"
             icon={<BiUpload size={20} />}
-            className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 text-white py-3 px-10"
+            className="bg-blue-500 hover:bg-blue-600 duration-200 flex gap-3 text-white py-5 px-24"
           />
         )}
       </div>

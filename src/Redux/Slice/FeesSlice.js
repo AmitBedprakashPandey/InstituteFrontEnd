@@ -60,6 +60,20 @@ export const FeesStatus = createAsyncThunk(
     }
   }
 );
+
+export const findBalanceAmtbyStudentName = createAsyncThunk(
+  "Fees/findBalanceAmt",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log(data);
+      const response = await axios.get(`${url}/paidamt/${data.studentname}/${localStorage.getItem("userid")}`, data);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      rejectWithValue(error.response.data.error);
+    }
+  }
+);
 const FeesSlice = createSlice({
   name: "Fees",
   initialState: {

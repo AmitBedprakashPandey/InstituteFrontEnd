@@ -4,10 +4,12 @@ import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { BiCamera, BiSave, BiUpload } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { getStateAll } from "../Redux/Slice/StateSlice";
+import { Stepper } from "primereact/stepper";
+import { StepperPanel } from "primereact/stepperpanel";
 import { getUser } from "../Redux/Slice/UserSlice";
 import {
   getSchoolbyId,
@@ -17,15 +19,16 @@ import {
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { useNavigate } from "react-router-dom";
+import { states } from "../MockDataBase/Database";
 export default function School() {
   const [formData, setFormData] = useState();
-  const { userid } = useSelector((state) => state.UserAuth);
-  const { State } = useSelector((state) => state.State);
-  const { School, message } = useSelector((state) => state.School);
+  const userid = localStorage.getItem("userid");
+  const { School, message, loading } = useSelector((state) => state.School);
   const toast = useRef();
-  const navigate = useNavigate();
+  const stepperRef = useRef(null);
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
+
   const formDataHandler = (e) => {
     setFormData({
       ...formData,
@@ -34,7 +37,7 @@ export default function School() {
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (School?.status === true) {
       setFormData(School);
     }
@@ -108,21 +111,24 @@ export default function School() {
   };
 
   const show = (message) => {
-    toast.current.show({ severity: "info", summary: message, life: 2000 });
+    toast.current.show({ severity: "info", summary: message, life: 1000 });
   };
 
-  useEffect(() => {
-    if (message) {
-      show(message);
-    }
-  }, [message]);
-
   const onSave = () => {
-    dispatch(createSchool(formData));
+    dispatch(createSchool(formData))
+      .then(() => {
+        show(message);
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      })
+      .catch(() => navigate("/wizard"));
   };
 
   const onUpdate = () => {
-    dispatch(updateSchool(formData));
+    dispatch(updateSchool(formData)).then(() => {
+      show(message);
+    });
   };
 
   const confirm1 = () => {
@@ -151,202 +157,258 @@ export default function School() {
 
   return (
     <>
-      <Toast ref={toast} position="bottom-right" />
+      <Toast ref={toast} position="top-center" />
       <ConfirmDialog />
-      <diV className="min-w-[30%] max-w-[50%] bg-white relative p-3">
-        <div className="flex gap-16 items-center justify-center">
-          <div className="relative">
-            <label>School Image</label>
-            <img
-              src={formData?.schoolPhoto}
-              className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
-            />
-            <input
-              id="schoolphoto"
-              type="file"
-              accept="image/*"
-              onChange={schoolImageHandler}
-              className="hidden"
-            />
-            <label
-              htmlFor="schoolphoto"
-              className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
-            >
-              <BiCamera size={20} />
-            </label>
-          </div>
-          <div className="relative">
-            <label>School Stamp</label>
-            <img
-              src={formData?.schoolStamp}
-              className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
-            />
+      <div className="flex justify-center h-screen">
+        <Stepper ref={stepperRef} style={{ flexBasis: "50rem" }}>
+          <StepperPanel header="School Details">
+            <diV className="w-full bg-white relative p-0">
+              <div className="flex items-center justify-center">
+                <div className="relative">
+                  <img
+                    src={formData?.schoolPhoto}
+                    className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
+                  />
+                  <input
+                    id="schoolphoto"
+                    type="file"
+                    accept="image/*"
+                    onChange={schoolImageHandler}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="schoolphoto"
+                    className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
+                  >
+                    <BiCamera size={20} />
+                  </label>
+                </div>
+              </div>
+              <div className="mt-7">
+                <FloatLabel>
+                  <InputText
+                    name="schoolName"
+                    value={formData?.schoolName}
+                    onChange={formDataHandler}
+                    className="border border-slate-400 p-3 w-full"
+                  />
+                  <label>
+                    Enter Organization Name{" "}
+                    <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+              </div>
+              <div className="mt-7">
+                <FloatLabel>
+                  <InputText
+                    name="address"
+                    value={formData?.address}
+                    onChange={formDataHandler}
+                    className="border border-slate-400 p-3 w-full"
+                  />
+                  <label>
+                    Enter Address <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+              </div>
+              <div className="mt-7 grid md:grid-cols-2  gap-7 ">
+                <FloatLabel>
+                  <InputText
+                    name="email"
+                    value={formData?.email}
+                    onChange={formDataHandler}
+                    className="border w-full border-slate-400 p-3"
+                  />
+                  <label>
+                    Enter email <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+                <FloatLabel>
+                  <InputText
+                    name="webiste"
+                    value={formData?.webiste}
+                    onChange={formDataHandler}
+                    className="border w-full border-slate-400 p-3 "
+                  />
+                  <label>Enter website</label>
+                </FloatLabel>
+              </div>
+              <div className="grid md:grid-cols-2 gap-7 mt-7 w-full">
+                <FloatLabel>
+                  <InputNumber
+                    name="phone"
+                    value={formData?.phone}
+                    useGrouping={false}
+                    maxLength={10}
+                    inputClassName="pl-3 h-12"
+                    onChange={(e) => formDataHandler(e.originalEvent)}
+                    className="border w-full border-slate-400 rounded-md"
+                  />
+                  <label>
+                    Phone Number <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+                <FloatLabel>
+                  <InputNumber
+                    name="phone2"
+                    value={formData?.phone2}
+                    useGrouping={false}
+                    maxLength={10}
+                    inputClassName="pl-3 h-12"
+                    onChange={(e) => formDataHandler(e.originalEvent)}
+                    className="border w-full border-slate-400 rounded-md"
+                  />
+                  <label>Phone Number 2</label>
+                </FloatLabel>
+              </div>
+              <div className="grid md:grid-cols-2 gap-7 mt-7">
+                <FloatLabel>
+                  <InputNumber
+                    name="office"
+                    value={formData?.office}
+                    onChange={(e) => formDataHandler(e.originalEvent)}
+                    useGrouping={false}
+                    maxLength={10}
+                    inputClassName="pl-3 h-12"
+                    className="border w-full border-slate-400 rounded-md"
+                  />
+                  <label>
+                    Office Number <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+                <FloatLabel>
+                  <InputNumber
+                    name="office2"
+                    value={formData?.office2}
+                    useGrouping={false}
+                    maxLength={10}
+                    aria-autocomplete="none"
+                    inputClassName="pl-3 h-12"
+                    onChange={(e) => formDataHandler(e.originalEvent)}
+                    className="border w-full border-slate-400 rounded-md"
+                  />
+                  <label>Office Number 2</label>
+                </FloatLabel>
+              </div>
+              <div className="grid md:grid-cols-2 gap-7 mt-7">
+                <FloatLabel>
+                  <InputText
+                    name="city"
+                    value={formData?.city}
+                    onChange={formDataHandler}
+                    className="border w-full border-slate-400 p-3"
+                  />
+                  <label>
+                    City <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+                <FloatLabel>
+                  <InputNumber
+                    name="pincode"
+                    value={formData?.pincode}
+                    useGrouping={false}
+                    maxLength={10}
+                    inputClassName="pl-3 h-12"
+                    onChange={(e) => formDataHandler(e.originalEvent)}
+                    className="border w-full border-slate-400 rounded-md"
+                  />
+                  <label>
+                    Pincode <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+              </div>
+              <div className="mt-7 w-full">
+                <FloatLabel>
+                  <Dropdown
+                    name="state"
+                    value={formData?.state}
+                    onChange={formDataHandler}
+                    options={states}
+                    optionLabel="state"
+                    optionValue="state"
+                    className="border border-slate-400 w-full h-12"
+                  />
+                  <label>
+                    State <span className="text-red-400">*</span>
+                  </label>
+                </FloatLabel>
+              </div>
+            </diV>
+            <div className="flex pt-4 justify-end">
+              <Button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                className="flex gap-2 bg-blue-500 text-white px-4 py-3"
+                onClick={() => stepperRef.current.nextCallback()}
+              />
+            </div>
+          </StepperPanel>
+          <StepperPanel header="School Stamp">
+            <diV className="w-full bg-white relative p-0">
+              <div className="flex gap-16 items-center justify-center">
+                <div className="relative">
+                  {/* <label>School Stamp</label> */}
+                  <img
+                    src={formData?.schoolStamp}
+                    className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
+                  />
 
-            <input
-              id="schoolStamp"
-              type="file"
-              accept="image/*"
-              onChange={schoolStampHandler}
-              className="hidden"
-            />
-            <label
-              htmlFor="schoolStamp"
-              className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
-            >
-              <BiCamera size={20} />
-            </label>
-          </div>
-        </div>
-        <div className="mt-7">
-          <FloatLabel>
-            <InputText
-              name="schoolName"
-              value={formData?.schoolName}
-              onChange={formDataHandler}
-              className="border border-slate-400 p-3 w-full"
-            />
-            <label>Enter Organization Name</label>
-          </FloatLabel>
-        </div>
-        <div className="mt-7">
-          <FloatLabel>
-            <InputText
-              name="address"
-              value={formData?.address}
-              onChange={formDataHandler}
-              className="border border-slate-400 p-3 w-full"
-            />
-            <label>Enter Address</label>
-          </FloatLabel>
-        </div>
-        <div className="mt-7 grid grid-cols-2  gap-3 ">
-          <FloatLabel>
-            <InputText
-              name="email"
-              value={formData?.email}
-              onChange={formDataHandler}
-              className="border w-full border-slate-400 p-3"
-            />
-            <label>Enter email</label>
-          </FloatLabel>
-          <FloatLabel>
-            <InputText
-              name="webiste"
-              value={formData?.webiste}
-              onChange={formDataHandler}
-              className="border w-full border-slate-400 p-3 "
-            />
-            <label>Enter website</label>
-          </FloatLabel>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 mt-7 w-full">
-          <FloatLabel>
-            <InputNumber
-              name="phone"
-              value={formData?.phone}
-              useGrouping={false}
-              maxLength={10}
-              inputClassName="pl-3 h-12"
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              className="border w-full border-slate-400 rounded-md"
-            />
-            <label>Phone Number</label>
-          </FloatLabel>
-          <FloatLabel>
-            <InputNumber
-              name="phone2"
-              value={formData?.phone2}
-              useGrouping={false}
-              maxLength={10}
-              inputClassName="pl-3 h-12"
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              className="border w-full border-slate-400 rounded-md"
-            />
-            <label>Phone Number 2</label>
-          </FloatLabel>
-        </div>
-        <div className="grid grid-cols-2 gap-3 mt-7">
-          <FloatLabel>
-            <InputNumber
-              name="office"
-              value={formData?.office}
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              useGrouping={false}
-              maxLength={10}
-              inputClassName="pl-3 h-12"
-              className="border w-full border-slate-400 rounded-md"
-            />
-            <label>Office Number</label>
-          </FloatLabel>
-          <FloatLabel>
-            <InputNumber
-              name="office2"
-              value={formData?.office2}
-              useGrouping={false}
-              maxLength={10}
-              inputClassName="pl-3 h-12"
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              className="border w-full border-slate-400 rounded-md"
-            />
-            <label>Office Number 2</label>
-          </FloatLabel>
-        </div>
-        <div className="grid grid-cols-2 gap-3 mt-7">
-          <FloatLabel>
-            <InputText
-              name="city"
-              value={formData?.city}
-              onChange={formDataHandler}
-              className="border w-full border-slate-400 p-3"
-            />
-            <label>City</label>
-          </FloatLabel>
-          <FloatLabel>
-            <InputNumber
-              name="pincode"
-              value={formData?.pincode}
-              useGrouping={false}
-              maxLength={10}
-              inputClassName="pl-3 h-12"
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              className="border w-full border-slate-400 rounded-md"
-            />
-            <label>Pincode</label>
-          </FloatLabel>
-        </div>
-        <div className="mt-7 w-full">
-          <FloatLabel>
-            <Dropdown
-              name="state"
-              value={formData?.state}
-              onChange={formDataHandler}
-              options={State}
-              optionLabel="state"
-              optionValue="state"
-              className="border border-slate-400 w-full h-12"
-            />
-            <label>State</label>
-          </FloatLabel>
-        </div>
-        <div className="pt-5 flex justify-end">
-          {School?.status === true ? (
-            <Button
-              label="update"
-              onClick={confirm2}
-              icon={<BiUpload size={20} />}
-              className="flex gap-2 bg-blue-500 hover:bg-blue-600 duration-300 text-white px-10 py-3"
-            />
-          ) : (
-            <Button
-              label="Save"
-              onClick={confirm1}
-              icon={<BiSave size={20} />}
-              className="flex gap-2 bg-green-500 hover:bg-green-600 duration-300 text-white px-12 py-3"
-            />
-          )}
-        </div>
-      </diV>
+                  <input
+                    id="schoolStamp"
+                    type="file"
+                    accept="image/*"
+                    onChange={schoolStampHandler}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="schoolStamp"
+                    className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
+                  >
+                    <BiCamera size={20} />
+                  </label>
+                </div>
+              </div>
+            </diV>
+            <div className="flex pt-4 justify-between">
+              <Button
+                label="Back"
+                severity="secondary"
+                icon="pi pi-arrow-left"
+                className="flex gap-2 bg-gray-500 text-white px-4 py-3"
+                onClick={() => stepperRef.current.prevCallback()}
+              />
+              <div className="flex justify-end">
+                {School?.status === true ? (
+                  <Button
+                    label="update"
+                    onClick={confirm2}
+                    loading={loading}
+                    icon={<BiUpload size={20} />}
+                    className="flex gap-2 bg-blue-500 text-white px-4 py-3"
+                  />
+                ) : (
+                  <Button
+                    label="Save"
+                    loading={loading}
+                    onClick={confirm1}
+                    disabled={
+                      formData?.schoolPhoto &&
+                      formData?.schoolName &&
+                      formData?.address &&
+                      formData?.email
+                        ? false
+                        : true
+                    }
+                    icon={<BiSave size={20} />}
+                    className="flex gap-2 bg-green-500 text-white px-4 py-3"
+                  />
+                )}
+              </div>
+            </div>
+          </StepperPanel>
+        </Stepper>
+      </div>
     </>
   );
 }

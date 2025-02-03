@@ -13,6 +13,7 @@ import ReligionSlice from "./Slice/ReligionSlice";
 import SchoolSlicse from "./Slice/SchoolSlicse";
 import StateSlice from "./Slice/StateSlice";
 import UserSlice from "./Slice/UserSlice";
+import FeesMonthSlise from "./Slice/FeesMonthSlise";
 const Store = configureStore({
   reducer: {
     Enquiry: EnquirySlice,
@@ -20,14 +21,15 @@ const Store = configureStore({
     UserAuth: UserSlice,
     Course: CourseSlice,
     AssignCourse: AssignCourseSlice,
-    Fees:FeesSlice,
-    CourseType:CourseTypeSlice,
-    State:StateSlice,
-    Gender :GenderSlice,
-    Religion:ReligionSlice,
-    Foundation:FoundationSlice,
-    PayementMode:PaymentModeSlice,
-    School:SchoolSlicse
+    Fees: FeesSlice,
+    CourseType: CourseTypeSlice,
+    State: StateSlice,
+    Gender: GenderSlice,
+    Religion: ReligionSlice,
+    Foundation: FoundationSlice,
+    PayementMode: PaymentModeSlice,
+    School: SchoolSlicse,
+    FeesMonth: FeesMonthSlise,
   },
 });
 export default Store;

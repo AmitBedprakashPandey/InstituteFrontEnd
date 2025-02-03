@@ -8,7 +8,7 @@ export const getSchoolbyId = createAsyncThunk(
   "School/getById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${url}/${id}`);      
+      const response = await axios.get(`${url}/${id}`);     
       return response.data;
     } catch (error) {
       rejectWithValue(error.response.data.error);
@@ -93,6 +93,7 @@ const SchoolSlice = createSlice({
       .addCase(createSchool.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        console.log(action.payload);        
         state.School = action.payload.data;
         state.message = action.payload?.message;
       })

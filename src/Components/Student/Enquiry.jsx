@@ -10,9 +10,7 @@ import { FaRedo } from "react-icons/fa";
 import {
   FaEye,
   FaEyeSlash,
-  FaFileCsv,
   FaFileExcel,
-  FaFilePdf,
   FaFilter,
   FaImage,
   FaPenToSquare,
@@ -20,18 +18,19 @@ import {
 } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { getEnquirybyId, updateEnquiry } from "../../Redux/Slice/EnquirySlice";
+import { createAdmission } from "../../Redux/Slice/AdmissionSlice";
 import EnquiryForm from "../../Utilites/EnquiryForm";
 import NavBar from "../NavBar";
 
 function Enquiry(_params) {
   const [openModel, setOpenModel] = useState(false);
   const [selectedData, setSelectedData] = useState();
-
   const [mode, setMode] = useState("s");
   const [dateData, setDateData] = useState({ fromDate: null, endDate: null });
   const { enquiry } = useSelector((state) => state.Enquiry);
   const { userid } = useSelector((state) => state.UserAuth);
   const dispatch = useDispatch();
+
   const dateDatahandler = (e) => {
     setDateData({ [e.target.name]: e.target.value });
   };
@@ -41,89 +40,121 @@ function Enquiry(_params) {
   }, [dispatch]);
 
   const dt = useRef(null);
-  const products = [];
-  const cols = [
-    { field: "code", header: "Code" },
-    { field: "name", header: "Name" },
-    { field: "category", header: "Category" },
-    { field: "quantity", header: "Quantity" },
-  ];
-  const exportColumns = cols.map((col) => ({
-    title: col.header,
-    dataKey: col.field,
-  }));
-
-  const exportCSV = (selectionOnly) => {
-    dt.current.exportCSV({ selectionOnly });
-  };
-
-  const exportPdf = () => {
-    import("jspdf").then((jsPDF) => {
-      import("jspdf-autotable").then(() => {
-        const doc = new jsPDF.default(0, 0);
-
-        doc.autoTable(exportColumns, products);
-        doc.save("products.pdf");
-      });
-    });
-  };
 
   const exportExcel = () => {
-    import("xlsx").then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(products);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
-      const excelBuffer = xlsx.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
+    import("xlsx")
+      .then((xlsx) => {
+        // Verify if xlsx was imported successfully
+        if (!xlsx) {
+          alert("Failed to load xlsx library");
+          return;
+        }
+        try {
+          // Check if 'enquiry2' is defined and has data
+          if (!enquiry || !Array.isArray(enquiry) || enquiry.length === 0) {
+            alert("Enquiry data is not defined or is not an array or is empty");
+            return;
+          }
 
-      saveAsExcelFile(excelBuffer, "products");
-    });
+          // Define the columns to export
+          const columnsToExport = [
+            "studentName",
+            "fatherName",
+            "course",
+            "email",
+            "mobileNo",
+            "enquiryDate",
+            "enquiryBy",
+            "status",
+          ];
+
+          // Filter the data to include only the selected columns
+          const filteredData = enquiry.map((item, index) => {
+            const filteredItem = {
+              "Sr.No.": index + 1, // Add serial number
+            };
+            columnsToExport.forEach((col) => {
+              if (col === "enquiryDate") {
+                filteredItem[col] = moment(item[col]).format("DD/MM/YYYY");
+              } else {
+                filteredItem[col] = item[col];
+              }
+            });
+            return filteredItem;
+          });
+
+          const worksheet = xlsx.utils.json_to_sheet(filteredData);
+
+          const workbook = {
+            Sheets: { "Enquiry List": worksheet },
+            SheetNames: ["Enquiry List"],
+          };
+
+          const excelBuffer = xlsx.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+          });
+
+          saveAsExcelFile(excelBuffer, "enquirylist");
+        } catch (error) {
+          console.error("Error creating Excel file:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error importing xlsx:", error);
+      });
   };
   const saveAsExcelFile = (buffer, fileName) => {
-    import("file-saver").then((module) => {
-      if (module && module.default) {
-        let EXCEL_TYPE =
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        let EXCEL_EXTENSION = ".xlsx";
-        const data = new Blob([buffer], {
-          type: EXCEL_TYPE,
-        });
+    import("file-saver")
+      .then((module) => {
+        if (module && module.default) {
+          const EXCEL_TYPE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+          const EXCEL_EXTENSION = ".xlsx";
+          const data = new Blob([buffer], {
+            type: EXCEL_TYPE,
+          });
 
-        module.default.saveAs(
-          data,
-          fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
-        );
-      }
-    });
+          module.default.saveAs(
+            data,
+            fileName + "_export_" + new Date().getTime() + EXCEL_EXTENSION
+          );
+        } else {
+          console.error("Failed to load file-saver module");
+        }
+      })
+      .catch((error) => {
+        console.error("Error importing file-saver:", error);
+      });
   };
 
   const header = (
     <div className="flex items-center justify-end gap-2">
-      <Button
+      <div>
+        {/* <Button
         type="button"
         icon={<FaFileCsv />}
         disabled={products}
         className="border-black w-10 h-10 rounded-full border-2"
         onClick={() => exportCSV(false)}
         data-pr-tooltip="CSV"
-      />
-      <Button
-        type="button"
-        disabled={products}
-        icon={<FaFileExcel color="#fff" />}
-        className="bg-green-500 border-black border w-10 h-10 rounded-full "
-        onClick={exportExcel}
-        data-pr-tooltip="XLS"
-      />
-      <Button
+      /> */}
+        <Button
+          type="button"
+          icon={<FaFileExcel color="#fff" />}
+          className="bg-green-500 border-black border w-10 h-10 rounded-full "
+          onClick={exportExcel}
+          data-pr-tooltip="XLS"
+        />
+        {/* <Button
         type="button"
         disabled={products}
         icon={<FaFilePdf color="#fff" />}
         className="bg-red-500 border-black border w-10 h-10 rounded-full "
         onClick={exportPdf}
         data-pr-tooltip="PDF"
-      />
+      /> */}
+      </div>
     </div>
   );
 
@@ -167,22 +198,25 @@ function Enquiry(_params) {
   const EnquiryStatusbodyTemplate = (rowData) => {
     return (
       <div className="flex items-center justify-center">
-        <Button
-          label={rowData?.enquiryStatus === true ? "Confired" : "Panding"}
-          onClick={() => {
-            dispatch(
-              updateEnquiry({
-                ...rowData,
-                enquiryStatus: !rowData?.enquiryStatus,
-              })
-            );
-          }}
-          className={`${
-            rowData?.enquiryStatus === true
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-red-500 hover:bg-red-600"
-          } text-white py-2 px-5 md:py-1 md:px-3  duration-200 `}
-        />
+        {rowData?.enquiryStatus === true ? (
+          <Button
+            label={"Confired"}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-5 md:py-1 md:px-3  duration-200"
+          />
+        ) : (
+          <Button
+            label={"Panding"}
+            onClick={() => {
+              dispatch(
+                updateEnquiry({
+                  ...rowData,
+                  enquiryStatus: true,
+                })
+              ).then((item) => dispatch(createAdmission(item.payload?.data)));
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-5 md:py-1 md:px-3  duration-200"
+          />
+        )}
       </div>
     );
   };
@@ -207,24 +241,26 @@ function Enquiry(_params) {
   };
   return (
     <div className="relative">
-      <NavBar />
       <Dialog
         header="Enquiry Form"
         position="top"
-        className="h-auto"
+        className="w-full h-full m-0 "
+        maximized={true}
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
+        headerClassName="px-6 py-3 border-b"
         visible={openModel}
         onHide={() => setOpenModel(false)}
       >
         <EnquiryForm mode={mode} data={selectedData} />
       </Dialog>
-      <div className="m-4 p-3 border-4 rounded-lg border-blue-500 shadow-slate-500 shadow-md bg-white">
+      <div className="md:m-3 p-3 border md:rounded-lg border-slate-400 shadow-slate-500 md:shadow-sm bg-white">
         <div className="flex justify-between">
           <strong className="">Register Enquries</strong>
           <div>
             <Button
               label="New Enquiry"
-              icon={<FaPlus />}
-              className=" text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+              icon={<FaPlus size={20} />}
+              className="flex gap-3  text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => {
                 setMode("s");
                 setOpenModel(true);
@@ -232,8 +268,8 @@ function Enquiry(_params) {
             />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid">
             <label>From Date</label>
             <Calendar
               touchUI
@@ -242,12 +278,12 @@ function Enquiry(_params) {
               value={dateData.fromDate}
               onChange={dateDatahandler}
               placeholder="DD/MM/YYYY"
-              className="h-10 border-slate-500 border rounded-md"
+              className="min-h-12 border-slate-500 border rounded-md"
               inputClassName="pl-3"
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="grid">
             <label>To Date</label>
             <Calendar
               touchUI
@@ -256,12 +292,12 @@ function Enquiry(_params) {
               dateFormat="dd/mm/yyyy"
               onChange={dateDatahandler}
               placeholder="DD/MM/YYYY"
-              className="h-10 border-slate-500 border rounded-md"
+              className="min-h-12 border-slate-500 border rounded-md"
               inputClassName="pl-3"
             />
           </div>
 
-          <div className="flex gap-2 mt-5">
+          <div className="flex gap-2 md:mt-7">
             <Button
               disabled={
                 dateData.fromDate !== null && dateData.endDate !== null
@@ -269,20 +305,22 @@ function Enquiry(_params) {
                   : true
               }
               onClick={dateFilterhandler}
-              className="capitalize flex gap-3 bg-blue-500 hover:bg-blue-600 duration-200 text-white p-3"
+              className="capitalize flex gap-3 bg-blue-500 hover:bg-blue-600 duration-200 text-white px-3 w-full lg:w-24"
             >
-              <FaFilter /> filter
+              <FaFilter size={20} />
+              filter
             </Button>
             <Button
               onClick={() => setDateData({ fromDate: null, endDate: null })}
-              className="flex gap-3 bg-red-500 hover:bg-red-600 duration-200 text-white p-3"
+              className="flex gap-3 bg-red-500 hover:bg-red-600 duration-200 text-white p-3 w-full lg:w-24  "
             >
-              <FaRedo /> Clear
+              <FaRedo size={20} />
+              <span className="">Clear</span>
             </Button>
           </div>
         </div>
       </div>
-      <div className="relative border-4 min-w-80 bg-white rounded-lg border-blue-500 shadow-slate-500 shadow-md m-4 overflow-hidden">
+      <div className="relative bg-white md:rounded-lg border border-slate-400 shadow-slate-500 md:shadow-md md:m-4 p-2 overflow-hidden">
         <DataTable
           value={enquiry}
           size="small"
@@ -294,7 +332,7 @@ function Enquiry(_params) {
         >
           <Column
             field="code"
-            headerClassName="border md:text-xs lg:text-lg text-nowrap pl-4 bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             bodyClassName="flex justify-center pt-7"
             header="Sr."
             body={indexTemplate}
@@ -302,49 +340,49 @@ function Enquiry(_params) {
           ></Column>
           <Column
             field="studentPhoto"
-            headerClassName="p-2 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Photo"
             body={imageTemplate}
             sortable
           ></Column>
           <Column
             field="studentName"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Student Name"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="fatherName"
-            headerClassName="p-3  md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Father Name"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="course"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap  border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             header="Course"
             sortable
           ></Column>
           <Column
             field="email"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Email"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="mobileNo"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Mobile No."
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="enquiryDate"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Enquiry Date"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             body={(e) => moment(e).format("DD/MM/YYYY")}
@@ -352,21 +390,21 @@ function Enquiry(_params) {
           ></Column>
           <Column
             field="enquiryBy"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Enquiry By"
             bodyClassName="md:text-xs lg:text-lg text-nowrap"
             sortable
           ></Column>
           <Column
             field="status"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Enquiry Status"
             sortable
             body={EnquiryStatusbodyTemplate}
           ></Column>
           <Column
             field="quantity"
-            headerClassName="p-3 md:text-xs lg:text-lg text-nowrap border  bg-slate-100"
+            headerClassName="text-xs  md:text-base md:font-semibold font-normal text-nowrap pl-4 border-b border-black"
             header="Action"
             body={ActionbodyTemplate}
             sortable

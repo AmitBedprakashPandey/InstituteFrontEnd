@@ -9,31 +9,32 @@ import { getSchoolbyId } from "../Redux/Slice/SchoolSlicse";
 import { useDispatch, useSelector } from "react-redux";
 export default function PrintPage(params) {
   const ref = useRef();
-  
+
   const { School } = useSelector((state) => state.School);
   const { userid } = useSelector((state) => state.UserAuth);
   const location = useLocation();
   const { student, fees } = location.state || {};
   const dispatch = useDispatch();
- 
+
   const table = [
     { sr: 1, part: "Admission Fee", amt: fees.admissionFee || 0 },
     { sr: 2, part: "Annual Fee", amt: fees.annualFee || 0 },
-    { sr: 3, part: "Tuition Fee", amt:fees.tuitionFee || 0 },
-    { sr: 4, part: "Transport Fee", amt: fees.transportFee || 0},
+    { sr: 3, part: "Tuition Fee", amt: fees.tuitionFee || 0 },
+    { sr: 4, part: "Transport Fee", amt: fees.transportFee || 0 },
     { sr: 5, part: "Stationary Fee", amt: fees?.stationoryFees || 0 },
     { sr: 6, part: "Exam Fee", amt: fees.examFee || 0 },
-    { sr: 7, part: "Reg Fee", amt: fees.regFee || 0},
+    { sr: 7, part: "Reg Fee", amt: fees.regFee || 0 },
     { sr: 8, part: "Misc Fee", amt: fees?.miscFee || 0 },
     { sr: 9, part: "Other Fee", amt: fees?.otherfee || 0 },
-    { sr: 10, part: "Caution Money", amt: fees?.cautionmoneyFee || 0},
-    { sr: 11, part: "Previous Balance", amt:fees?.previousbalanceFee || 0 },
+    { sr: 10, part: "Caution Money", amt: fees?.cautionmoneyFee || 0 },
+    { sr: 11, part: "Previous Balance", amt: fees?.previousbalanceFee || 0 },
   ];
-  const  total = table.reduce((acc, item) => acc + item.amt, 0);
+
+  const total = table.reduce((acc, item) => acc + item.amt, 0);
+
   useLayoutEffect(() => {
     dispatch(getSchoolbyId(userid));
   }, [dispatch]);
- 
 
   console.log(fees);
 
@@ -62,8 +63,11 @@ export default function PrintPage(params) {
               {School?.phone} / {School?.phone2}
             </h1>
             <h1 className="mt-1 text-xs border border-slate-600 border-l-0 border-r-0 w-full px-3 py-0 flex justify-start">
-              <span className="font-bold text-nowrap">Address :</span><p className="uppercase">
-              {School?.address}{" "}{School?.city}{" "}{School?.state}{" "}{School?.pincode}</p>
+              <span className="font-bold text-nowrap">Address :</span>
+              <p className="uppercase">
+                {School?.address} {School?.city} {School?.state}{" "}
+                {School?.pincode}
+              </p>
             </h1>
             <h1 className="mt-2 text-white bg-slate-800 w-full px-3 py-1 flex justify-center">
               FEE RECEIPT
