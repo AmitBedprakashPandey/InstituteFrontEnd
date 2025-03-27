@@ -159,255 +159,232 @@ export default function School() {
     <>
       <Toast ref={toast} position="top-center" />
       <ConfirmDialog />
-      <div className="flex justify-center h-screen">
-        <Stepper ref={stepperRef} style={{ flexBasis: "50rem" }}>
-          <StepperPanel header="School Details">
-            <diV className="w-full bg-white relative p-0">
-              <div className="flex items-center justify-center">
-                <div className="relative">
-                  <img
-                    src={formData?.schoolPhoto}
-                    className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
-                  />
-                  <input
-                    id="schoolphoto"
-                    type="file"
-                    accept="image/*"
-                    onChange={schoolImageHandler}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="schoolphoto"
-                    className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
-                  >
-                    <BiCamera size={20} />
-                  </label>
-                </div>
-              </div>
-              <div className="mt-7">
-                <FloatLabel>
-                  <InputText
-                    name="schoolName"
-                    value={formData?.schoolName}
-                    onChange={formDataHandler}
-                    className="border border-slate-400 p-3 w-full"
-                  />
-                  <label>
-                    Enter Organization Name{" "}
-                    <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-              </div>
-              <div className="mt-7">
-                <FloatLabel>
-                  <InputText
-                    name="address"
-                    value={formData?.address}
-                    onChange={formDataHandler}
-                    className="border border-slate-400 p-3 w-full"
-                  />
-                  <label>
-                    Enter Address <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-              </div>
-              <div className="mt-7 grid md:grid-cols-2  gap-7 ">
-                <FloatLabel>
-                  <InputText
-                    name="email"
-                    value={formData?.email}
-                    onChange={formDataHandler}
-                    className="border w-full border-slate-400 p-3"
-                  />
-                  <label>
-                    Enter email <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-                <FloatLabel>
-                  <InputText
-                    name="webiste"
-                    value={formData?.webiste}
-                    onChange={formDataHandler}
-                    className="border w-full border-slate-400 p-3 "
-                  />
-                  <label>Enter website</label>
-                </FloatLabel>
-              </div>
-              <div className="grid md:grid-cols-2 gap-7 mt-7 w-full">
-                <FloatLabel>
-                  <InputNumber
-                    name="phone"
-                    value={formData?.phone}
-                    useGrouping={false}
-                    maxLength={10}
-                    inputClassName="pl-3 h-12"
-                    onChange={(e) => formDataHandler(e.originalEvent)}
-                    className="border w-full border-slate-400 rounded-md"
-                  />
-                  <label>
-                    Phone Number <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-                <FloatLabel>
-                  <InputNumber
-                    name="phone2"
-                    value={formData?.phone2}
-                    useGrouping={false}
-                    maxLength={10}
-                    inputClassName="pl-3 h-12"
-                    onChange={(e) => formDataHandler(e.originalEvent)}
-                    className="border w-full border-slate-400 rounded-md"
-                  />
-                  <label>Phone Number 2</label>
-                </FloatLabel>
-              </div>
-              <div className="grid md:grid-cols-2 gap-7 mt-7">
-                <FloatLabel>
-                  <InputNumber
-                    name="office"
-                    value={formData?.office}
-                    onChange={(e) => formDataHandler(e.originalEvent)}
-                    useGrouping={false}
-                    maxLength={10}
-                    inputClassName="pl-3 h-12"
-                    className="border w-full border-slate-400 rounded-md"
-                  />
-                  <label>
-                    Office Number <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-                <FloatLabel>
-                  <InputNumber
-                    name="office2"
-                    value={formData?.office2}
-                    useGrouping={false}
-                    maxLength={10}
-                    aria-autocomplete="none"
-                    inputClassName="pl-3 h-12"
-                    onChange={(e) => formDataHandler(e.originalEvent)}
-                    className="border w-full border-slate-400 rounded-md"
-                  />
-                  <label>Office Number 2</label>
-                </FloatLabel>
-              </div>
-              <div className="grid md:grid-cols-2 gap-7 mt-7">
-                <FloatLabel>
-                  <InputText
-                    name="city"
-                    value={formData?.city}
-                    onChange={formDataHandler}
-                    className="border w-full border-slate-400 p-3"
-                  />
-                  <label>
-                    City <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-                <FloatLabel>
-                  <InputNumber
-                    name="pincode"
-                    value={formData?.pincode}
-                    useGrouping={false}
-                    maxLength={10}
-                    inputClassName="pl-3 h-12"
-                    onChange={(e) => formDataHandler(e.originalEvent)}
-                    className="border w-full border-slate-400 rounded-md"
-                  />
-                  <label>
-                    Pincode <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-              </div>
-              <div className="mt-7 w-full">
-                <FloatLabel>
-                  <Dropdown
-                    name="state"
-                    value={formData?.state}
-                    onChange={formDataHandler}
-                    options={states}
-                    optionLabel="state"
-                    optionValue="state"
-                    className="border border-slate-400 w-full h-12"
-                  />
-                  <label>
-                    State <span className="text-red-400">*</span>
-                  </label>
-                </FloatLabel>
-              </div>
-            </diV>
-            <div className="flex pt-4 justify-end">
-              <Button
-                label="Next"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                className="flex gap-2 bg-blue-500 text-white px-4 py-3"
-                onClick={() => stepperRef.current.nextCallback()}
+      <div className="relative dark:bg-slate-800 w-full flex justify-center">
+        <div className="grid grid-cols-1 px-3 ">
+          <div className="w-full flex justify-center">
+            <div className="relative w-[100px] h-[100px]  m-3">
+              <img
+                src={formData?.schoolPhoto}
+                className="w-[100px] h-[100px] bg-cover bg-fit dark:border-slate-400 dark:bg-slate-800 rounded-full border border-slate-500"
               />
+              <input
+                id="schoolphoto"
+                type="file"
+                accept="image/*"
+                onChange={schoolImageHandler}
+                className="hidden"
+              />
+              <label
+                htmlFor="schoolphoto"
+                className="absolute dark:bg-slate-800 dark:text-white bottom-0 right-0 border dark:border-slate-400 dark:bg-slate-800 w-8 h-8  bg-white border-black rounded-full flex justify-center items-center"
+              >
+                <BiCamera size={20} />
+              </label>
             </div>
-          </StepperPanel>
-          <StepperPanel header="School Stamp">
-            <diV className="w-full bg-white relative p-0">
-              <div className="flex gap-16 items-center justify-center">
-                <div className="relative">
-                  {/* <label>School Stamp</label> */}
-                  <img
-                    src={formData?.schoolStamp}
-                    className="w-[100px] h-[100px] bg-cover bg-fit shadow-md shadow-slate-500 rounded-full border"
-                  />
+          </div>
+          <div className="w-full mt-7">
+            <FloatLabel>
+              <InputText
+                name="schoolName"
+                value={formData?.schoolName}
+                onChange={formDataHandler}
+                className="border border-slate-400 dark:bg-slate-800 p-3 w-full"
+              />
+              <label className="dark:text-slate-400">
+                Enter Organization Name <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+          </div>
+          <div className="mt-7">
+            <FloatLabel>
+              <InputText
+                name="address"
+                value={formData?.address}
+                onChange={formDataHandler}
+                className="border border-slate-400 dark:bg-slate-800 p-3 w-full"
+              />
+              <label className="dark:text-slate-400">
+                Enter Address <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+          </div>
+          <div className="mt-7">
+            <FloatLabel>
+              <InputText
+                name="email"
+                value={formData?.email}
+                onChange={formDataHandler}
+                className="w-full border  border-slate-400 dark:bg-slate-800 p-3"
+              />
+              <label className="dark:text-slate-400">
+                Enter email <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+          </div>
+          <div className="mt-7">
+            <FloatLabel>
+              <InputText
+                name="webiste"
+                value={formData?.webiste}
+                onChange={formDataHandler}
+                className="w-full border  border-slate-400 dark:bg-slate-800 p-3 "
+              />
+              <label className="dark:text-slate-400">Enter website</label>
+            </FloatLabel>
+          </div>
+          <div className="flex justify-between mt-7">
+            <FloatLabel>
+              <InputNumber
+                name="phone"
+                value={formData?.phone}
+                useGrouping={false}
+                maxLength={10}
+                inputClassName="pl-3 h-12 w-full dark:bg-slate-800"
+                onChange={(e) => formDataHandler(e.originalEvent)}
+                className="w-full border  border-slate-400 dark:bg-slate-800 rounded-md"
+              />
+              <label className="dark:text-slate-400">
+                Phone Number <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputNumber
+                name="phone2"
+                value={formData?.phone2}
+                useGrouping={false}
+                maxLength={10}
+                inputClassName="pl-3 h-12 w-full dark:bg-slate-800"
+                onChange={(e) => formDataHandler(e.originalEvent)}
+                className="border border-slate-400 dark:bg-slate-800 rounded-md"
+              />
+              <label className="dark:text-slate-400">Phone Number 2</label>
+            </FloatLabel>
+          </div>
+          <div className="flex justify-between mt-7">
+            <FloatLabel>
+              <InputNumber
+                name="office"
+                value={formData?.office}
+                onChange={(e) => formDataHandler(e.originalEvent)}
+                useGrouping={false}
+                maxLength={10}
+                inputClassName="pl-3 h-12 w-full dark:bg-slate-800"
+                className="border border-slate-400 dark:bg-slate-800 rounded-md"
+              />
+              <label className="dark:text-slate-400">
+                Office Number <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputNumber
+                name="office2"
+                value={formData?.office2}
+                useGrouping={false}
+                maxLength={10}
+                aria-autocomplete="none"
+                inputClassName="pl-3 h-12 w-full dark:bg-slate-800"
+                onChange={(e) => formDataHandler(e.originalEvent)}
+                className="border border-slate-400 dark:bg-slate-800 rounded-md"
+              />
+              <label className="dark:text-slate-400">Office Number 2</label>
+            </FloatLabel>
+          </div>
+          <div className="flex justify-between mt-7">
+            <FloatLabel>
+              <InputText
+                name="city"
+                value={formData?.city}
+                onChange={formDataHandler}
+                className="w-full border border-slate-400 dark:bg-slate-800 p-3"
+              />
+              <label className="dark:text-slate-400">
+                City <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputNumber
+                name="pincode"
+                value={formData?.pincode}
+                useGrouping={false}
+                maxLength={6}
+                inputClassName="pl-3 h-12 w-full dark:bg-slate-800"
+                onChange={(e) => formDataHandler(e.originalEvent)}
+                className=" border  border-slate-400 dark:bg-slate-800 rounded-md"
+              />
+              <label className="dark:text-slate-400">
+                Pincode <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+          </div>
+          <div className="mt-7">
+            <FloatLabel>
+              <Dropdown
+                name="state"
+                value={formData?.state}
+                onChange={formDataHandler}
+                options={states}
+                optionLabel="state"
+                optionValue="state"
+                className="w-full border border-slate-400 dark:bg-slate-800  h-12"
+              />
+              <label className="dark:text-slate-400">
+                State <span className="text-red-400">*</span>
+              </label>
+            </FloatLabel>
+          </div>
 
-                  <input
-                    id="schoolStamp"
-                    type="file"
-                    accept="image/*"
-                    onChange={schoolStampHandler}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="schoolStamp"
-                    className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
-                  >
-                    <BiCamera size={20} />
-                  </label>
-                </div>
-              </div>
-            </diV>
-            <div className="flex pt-4 justify-between">
-              <Button
-                label="Back"
-                severity="secondary"
-                icon="pi pi-arrow-left"
-                className="flex gap-2 bg-gray-500 text-white px-4 py-3"
-                onClick={() => stepperRef.current.prevCallback()}
+          {/* <div className="mt-7">
+            <div className="relative w-[100px] h-[100px]">
+              <img
+                src={formData?.schoolStamp}
+                className="w-[100px] h-[100px] bg-cover bg-fit rounded-full border"
               />
-              <div className="flex justify-end">
-                {School?.status === true ? (
-                  <Button
-                    label="update"
-                    onClick={confirm2}
-                    loading={loading}
-                    icon={<BiUpload size={20} />}
-                    className="flex gap-2 bg-blue-500 text-white px-4 py-3"
-                  />
-                ) : (
-                  <Button
-                    label="Save"
-                    loading={loading}
-                    onClick={confirm1}
-                    disabled={
-                      formData?.schoolPhoto &&
-                      formData?.schoolName &&
-                      formData?.address &&
-                      formData?.email
-                        ? false
-                        : true
-                    }
-                    icon={<BiSave size={20} />}
-                    className="flex gap-2 bg-green-500 text-white px-4 py-3"
-                  />
-                )}
-              </div>
+
+              <input
+                id="schoolStamp"
+                type="file"
+                accept="image/*"
+                onChange={schoolStampHandler}
+                className="hidden"
+              />
+              <label
+                htmlFor="schoolStamp"
+                className="absolute bottom-0 right-0 border w-8 h-8 shadow shadow-slate-500 bg-white border-black rounded-full flex justify-center items-center"
+              >
+                <BiCamera size={20} />
+              </label>
             </div>
-          </StepperPanel>
-        </Stepper>
+            <label className="dark:text-white">Select Stemp</label>
+          </div> */}
+
+          <div className="flex justify-center py-5">
+            {School?.status === true ? (
+              <Button
+                label="update"
+                onClick={confirm2}
+                loading={loading}
+                icon={<BiUpload size={20} />}
+                className="flex justify-center gap-2 bg-blue-500 text-white px-28 py-4"
+              />
+            ) : (
+              <Button
+                label="Save"
+                loading={loading}
+                onClick={confirm1}
+                disabled={
+                  formData?.schoolPhoto &&
+                  formData?.schoolName &&
+                  formData?.address &&
+                  formData?.email
+                    ? false
+                    : true
+                }
+                icon={<BiSave size={20} />}
+                className="flex justify-center gap-2 bg-green-500 text-white px-28 py-4"
+              />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

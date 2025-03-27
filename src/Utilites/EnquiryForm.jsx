@@ -186,7 +186,7 @@ function EnquiryForm({ mode, data }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative dark:bg-slate-800">
       <Toast ref={toast} />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 lg:place-content-center w-full gap-5 mt-5">
@@ -197,7 +197,7 @@ function EnquiryForm({ mode, data }) {
             value={formData?.studentName}
             onChange={formDatahandler}
             autoFocus
-            className="border border-slate-400  h-12 pl-3 w-full"
+            className="border border-slate-400 dark:bg-slate-800  h-12 pl-3 w-full"
           />
           <label htmlFor="StudentName">
             Student Name <span className="text-red-500">*</span>
@@ -210,7 +210,7 @@ function EnquiryForm({ mode, data }) {
             value={formData?.fatherName}
             onChange={formDatahandler}
             fatherName
-            className="border border-slate-400  h-12 pl-3 w-full"
+            className="border border-slate-400 dark:bg-slate-800  h-12 pl-3 w-full"
           />
           <label htmlFor="fatherName">
             Father Name <span className="text-red-500">*</span>
@@ -223,7 +223,7 @@ function EnquiryForm({ mode, data }) {
             autoComplete="motheer name"
             value={formData?.motherName}
             onChange={formDatahandler}
-            className="border border-slate-400  h-12 pl-3 w-full"
+            className="border border-slate-400 dark:bg-slate-800  h-12 pl-3 w-full"
           />
           <label for="mothername">Mother Name</label>
         </FloatLabel>
@@ -238,7 +238,7 @@ function EnquiryForm({ mode, data }) {
             filterPlaceholder="Select a Course"
             filterInput
             filter
-            className="border border-slate-400 w-full h-12"
+            className="border border-slate-400 dark:bg-slate-800  w-full h-12"
           />
           <label htmlFor="dd-city">
             Select a Course <span className="text-red-500">*</span>
@@ -295,8 +295,8 @@ function EnquiryForm({ mode, data }) {
         <FloatLabel>
           <Calendar
             id="birth_date"
-            inputClassName="pl-3 "
-            className="border border-slate-400 rounded-md  h-12 w-full"
+            inputClassName="pl-3 dark:bg-slate-800"
+            className="border border-slate-400 dark:bg-slate-800 rounded-md  h-12 w-full"
             dateFormat="dd/mm/yy"
             name="dob"
             showIcon
@@ -314,9 +314,9 @@ function EnquiryForm({ mode, data }) {
             dateFormat="dd/mm/yy"
             value={new Date(formData?.enquiryDate)}
             onChange={formDatahandler}
-            inputClassName="pl-3"
+            inputClassName="pl-3 dark:bg-slate-800"
             showIcon
-            className="border border-slate-400 rounded-md  h-12 w-full"
+            className="border border-slate-400 dark:bg-slate-800 rounded-md  h-12 w-full"
           />
           <label htmlFor="fathername">Enquiry Date</label>
         </FloatLabel>
@@ -328,8 +328,8 @@ function EnquiryForm({ mode, data }) {
             value={formData?.mobileNo}
             onChange={(e) => formDatahandler(e.originalEvent)}
             maxLength={10}
-            inputClassName="pl-3"
-            className="border border-slate-400 rounded-md  h-12 w-full"
+            inputClassName="pl-3 dark:bg-slate-800"
+            className="border border-slate-400 rounded-md dark:bg-slate-800  h-12 w-full"
           />
           <label for="mobileNo">
             Mobile No. <span className="text-red-500">*</span>
@@ -343,7 +343,7 @@ function EnquiryForm({ mode, data }) {
             onChange={(e) => formDatahandler(e.originalEvent)}
             useGrouping={false}
             maxLength={10}
-            inputClassName="pl-3"
+            inputClassName="pl-3 dark:bg-slate-800"
             className="border rounded-md border-slate-400  h-12 w-full"
           />
           <label for="altMobile">Alternate Mobile No. </label>
@@ -352,7 +352,7 @@ function EnquiryForm({ mode, data }) {
         <FloatLabel>
           <InputText
             id="email"
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800  h-12 w-full pl-3"
             name="email"
             autoComplete="email"
             value={formData?.email}
@@ -372,7 +372,7 @@ function EnquiryForm({ mode, data }) {
             optionValue="gender"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-full  h-12"
+            className="border rounded-md border-slate-400 dark:bg-slate-800 w-full  h-12"
           />
           <label htmlFor="gender">Gender</label>
         </FloatLabel>
@@ -388,13 +388,13 @@ function EnquiryForm({ mode, data }) {
             optionValue="religion"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-full  h-12"
+            className="border rounded-md border-slate-400 dark:bg-slate-800 w-full  h-12"
           />
           <label htmlFor="religion">Religion</label>
         </FloatLabel>
         <FloatLabel>
           <InputText
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800  h-12 w-full pl-3"
             id="caste"
             name="caste"
             autoComplete="caste"
@@ -410,7 +410,7 @@ function EnquiryForm({ mode, data }) {
             name="address1"
             value={formData?.address1}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800  h-12 w-full pl-3"
           />
           <label htmlFor="address1">Address-1</label>
         </FloatLabel>
@@ -420,7 +420,7 @@ function EnquiryForm({ mode, data }) {
             name="address2"
             value={formData?.address2}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800 h-12 w-full pl-3"
           />
           <label htmlFor="address2">Address-2</label>
         </FloatLabel>
@@ -430,7 +430,7 @@ function EnquiryForm({ mode, data }) {
             name="city"
             value={formData?.city}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800  h-12 w-full pl-3"
           />
           <label for="mothername">City</label>
         </FloatLabel>
@@ -445,7 +445,7 @@ function EnquiryForm({ mode, data }) {
             optionValue="state"
             filterPlaceholder="Select a Course"
             filter
-            className="border rounded-md border-slate-400 w-full  h-12"
+            className="border rounded-md border-slate-400 dark:bg-slate-800 w-full  h-12"
           />
           <label htmlFor="state">State</label>
         </FloatLabel>
@@ -456,7 +456,7 @@ function EnquiryForm({ mode, data }) {
             name="enquiryBy"
             value={formData?.enquiryBy}
             onChange={formDatahandler}
-            className="border rounded-md border-slate-400  h-12 w-full pl-3"
+            className="border rounded-md border-slate-400 dark:bg-slate-800 h-12 w-full pl-3"
           />
           <label htmlFor="enquiryBy">EnquiryBy</label>
         </FloatLabel>

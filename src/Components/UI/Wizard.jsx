@@ -10,15 +10,15 @@ export default function Wizard(params) {
   const { School } = useSelector((state) => state.School);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useLayoutEffect(() => {
-    if (School) {
-      navigate("/");
-    }
-    dispatch(getSchoolbyId(userid));
-  }, [School, dispatch]);
+  // useLayoutEffect(() => {
+  //   if (School) {
+  //     navigate("/");
+  //   }
+  //   dispatch(getSchoolbyId(userid));
+  // }, [School, dispatch]);
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full mt-0 rounded-lg  shadow-gray-400 shadow-lg">
+      <div className="w-full mt-0 rounded-lg min-h-screen md:w-12/12">
         <SchoolForm />
       </div>
     </div>

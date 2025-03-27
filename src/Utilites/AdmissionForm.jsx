@@ -223,7 +223,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="StudentName"
-              className="border border-slate-400 h-12 pl-3  w-full"
+              className="border border-slate-400 h-12 pl-3  w-full dark:bg-slate-800"
               name="studentName"
               value={formData?.studentName}
               onChange={formDataHandler}
@@ -237,7 +237,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="fathername"
-              className="border border-slate-400 h-12 pl-3 w-full"
+              className="border border-slate-400 h-12 pl-3 w-full dark:bg-slate-800"
               name="fatherName"
               value={formData?.fatherName}
               onChange={formDataHandler}
@@ -251,7 +251,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="mothername"
-              className="border border-slate-400 h-12 pl-3  w-full"
+              className="border border-slate-400 h-12 pl-3  w-full dark:bg-slate-800"
               name="motherName"
               value={formData?.motherName}
               onChange={formDataHandler}
@@ -271,7 +271,7 @@ function AdmissionForm({ mode, data }) {
               filterPlaceholder="Select a Course"
               filterInput
               filter
-              className="border border-slate-400 w-full h-12"
+              className="border border-slate-400 w-full h-12 dark:bg-slate-800"
             />
             <label htmlFor="dd-city">
               Select a Course <span className="text-red-500">*</span>
@@ -330,8 +330,8 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <Calendar
               inputId="dd-dob"
-              className="border border-slate-400  w-full h-12 rounded-md"
-              inputClassName="pl-3"
+              className="border border-slate-400  w-full h-12 rounded-md "
+              inputClassName="pl-3 dark:bg-slate-800"
               name="dob"
               dateFormat="dd/mm/yy"
               placeholder="dd/mm/yy"
@@ -347,7 +347,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <Calendar
               inputId="regdate"
-              inputClassName="pl-3 "
+              inputClassName="pl-3 dark:bg-slate-800"
               className="border border-slate-400 rounded-md  h-12  w-full"
               dateFormat="dd/mm/yy"
               placeholder="dd/mm/yy"
@@ -366,7 +366,7 @@ function AdmissionForm({ mode, data }) {
               id="mobileNo"
               useGrouping={false}
               maxLength={10}
-              inputClassName="pl-3"
+              inputClassName="pl-3 dark:bg-slate-800"
               name="mobileNo"
               value={formData?.mobileNo}
               onChange={(e) => formDataHandler(e.originalEvent)}
@@ -383,7 +383,7 @@ function AdmissionForm({ mode, data }) {
               id="altMobileNo"
               useGrouping={false}
               maxLength={10}
-              inputClassName="pl-3"
+              inputClassName="pl-3 dark:bg-slate-800"
               name="altMobileNo"
               value={formData?.altMobileNo}
               onChange={(e) => formDataHandler(e.originalEvent)}
@@ -396,7 +396,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="email"
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12  w-full pl-3 dark:bg-slate-800"
               name="email"
               value={formData?.email}
               onChange={formDataHandler}
@@ -408,7 +408,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="bloodGroup"
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12  w-full pl-3 dark:bg-slate-800"
               name="bloodGroup"
               value={formData?.bloodGroup}
               onChange={formDataHandler}
@@ -428,7 +428,7 @@ function AdmissionForm({ mode, data }) {
               optionValue="gender"
               filterPlaceholder="Select a Course"
               filter
-              className="border border-slate-400  w-full"
+              className="border border-slate-400 dark:bg-slate-800 w-full"
             />
             <label htmlFor="gender">Gender</label>
           </FloatLabel>
@@ -445,7 +445,7 @@ function AdmissionForm({ mode, data }) {
               optionValue="religion"
               filterPlaceholder="Select a Course"
               filter
-              className="border border-slate-400  w-full"
+              className="border border-slate-400 dark:bg-slate-800 w-full"
             />
             <label htmlFor="religion">Religion</label>
           </FloatLabel>
@@ -453,7 +453,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="studentAadharNo"
               name="studentAadharNo"
               value={formData?.studentAadharNo}
@@ -465,7 +465,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="studentQualification"
               name="studentQualification"
               value={formData?.studentQualification}
@@ -477,7 +477,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="nationality"
               name="nationality"
               value={formData?.nationality}
@@ -489,7 +489,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="caste"
               name="caste"
               value={formData?.caste}
@@ -501,7 +501,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="address1"
               name="address1"
               value={formData?.address1}
@@ -513,7 +513,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               id="address2"
               name="address2"
               value={formData?.address2}
@@ -525,7 +525,7 @@ function AdmissionForm({ mode, data }) {
         <div className="pt-5">
           <FloatLabel>
             <InputText
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800  w-full pl-3"
               id="city"
               name="city"
               value={formData?.city}
@@ -546,7 +546,7 @@ function AdmissionForm({ mode, data }) {
               optionValue="state"
               filterPlaceholder="Select a Course"
               filter
-              className="border border-slate-400  w-full"
+              className="border border-slate-400 dark:bg-slate-800 w-full"
             />
             <label htmlFor="state">State</label>
           </FloatLabel>
@@ -555,7 +555,7 @@ function AdmissionForm({ mode, data }) {
           <FloatLabel>
             <InputText
               id="examCenter"
-              className="border border-slate-400 h-12  w-full pl-3"
+              className="border border-slate-400 h-12 dark:bg-slate-800 w-full pl-3"
               name="examCenter"
               value={formData?.examCenter}
               onChange={formDataHandler}
@@ -575,7 +575,7 @@ function AdmissionForm({ mode, data }) {
               optionValue="foundation"
               filterPlaceholder="Select a Course"
               filter
-              className="border border-slate-400  w-full"
+              className="border border-slate-400 dark:bg-slate-800 w-full"
             />
             <label htmlFor="foundationCourse">Foundation Course</label>
           </FloatLabel>
@@ -707,7 +707,7 @@ function AdmissionForm({ mode, data }) {
           </span>
         </div>
       </div>
-      
+
       <div className="mt-5 flex justify-end">
         {mode === "s" ? (
           <Button

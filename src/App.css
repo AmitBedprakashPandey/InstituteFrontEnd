@@ -1,56 +1,37 @@
-@page {
-  padding: 15px;
+/* PenalMenu Navbar */
+.p-panelmenu .p-panelmenu-content{
+  background-color: transparent;
+  padding: 0;
+}
+/* PenalMenu Navbar */
+
+
+/* DataTable */
+/* .p-datatable-header{
+  background:#1e293b;
+} */
+.dark .p-datatable-header {
+  @apply bg-slate-800 text-white font-semibold; /* Dark mode header */
 }
 
-@media print {
-  @page {
-    padding: 15px;
-  }
+/* Table Cell Customization */
+.p-datatable .p-datatable-thead > tr > th {
+  @apply bg-blue-50 dark:bg-gray-700 text-black dark:text-white border-b dark:border-gray-600;
 }
 
-
-.p-panelmenu-header-active {
-  background-color: #007ad9;
-  color: white;
+.p-datatable .p-datatable-tbody > tr > td {
+  @apply bg-white dark:bg-slate-900 text-black dark:text-white border-b dark:border-gray-700;
 }
 
-.p-menuitem-link-active {
-  color: white;
+.p-datatable .p-datatable-tbody > tr:hover {
+  @apply bg-blue-200 dark:bg-slate-700;
 }
 
-.p-menuitem-link {
-  color: black;
+.p-paginator .p-paginator-pages .p-paginator-page {
+  @apply bg-blue-50 dark:bg-gray-800 text-black dark:text-white border dark:border-gray-600;
 }
 
-
-.panelmenu {
-
-  .p-sidebar-icons > .p-sidebar-icon{
-    @apply text-white
-  }
-
-  .p-panelmenu-content {
-    @apply p-0
-  }
-
-  .p-panelmenu-header-content>.p-panelmenu-header-link {
-    @apply bg-blue-500 border-b border-white/50
-  }
-
-  .p-menuitem-text,
-  .p-menuitem-icon, .p-submenu-icon {
-    @apply text-white
-  }
-
-  .p-menuitem {
-    @apply bg-blue-400
-  }
-
-  .p-menuitem-link {
-    @apply py-5
-  }
-
-  .p-menuitem-content {
-    @apply hover:bg-blue-800 py-0
-  }
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  @apply bg-blue-500 text-white;
 }
+/* DataTable */

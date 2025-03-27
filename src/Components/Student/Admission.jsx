@@ -6,9 +6,7 @@ import { Calendar } from "primereact/calendar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import {
-  FaFilePdf,
   FaFileExcel,
-  FaFileCsv,
   FaPenToSquare,
   FaPlus,
   FaFilter,
@@ -19,10 +17,10 @@ import AdmissionForm from "../../Utilites/AdmissionForm";
 import EnquiryForm from "../../Utilites/EnquiryForm";
 import { getAdmissionbyId } from "../../Redux/Slice/AdmissionSlice";
 import { useDispatch, useSelector } from "react-redux";
-import NavBar from "../NavBar";
 import { Image } from "primereact/image";
 import moment from "moment/moment";
 import { Toast } from "primereact/toast";
+import Navbar2 from "../Nabar2";
 
 function Admission(_params) {
   const [openModel, setOpenModel] = useState(false);
@@ -233,15 +231,15 @@ function Admission(_params) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative bg-white dark:bg-slate-800">
       <Toast ref={toast} />
       <Dialog
         header="Admission Form"
         position="top"
         className="w-full h-full m-0 "
         maximized={true}
-        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
-        headerClassName="px-6 py-3 border-b"
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden dark:bg-slate-800"
+        headerClassName="px-6 py-3 border-b dark:bg-slate-800 dark:text-white"
         visible={openModel}
         onHide={() => setOpenModel(false)}
       >
@@ -252,30 +250,30 @@ function Admission(_params) {
         position="top"
         className="w-full h-full m-0 "
         maximized={true}
-        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
-        headerClassName="px-6 py-3 border-b"
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden dark:bg-slate-800"
+        headerClassName="px-6 py-3 border-b dark:bg-slate-800 dark:text-white"
         visible={openModel2}
         onHide={() => setOpenModel2(false)}
       >
         <EnquiryForm mode={"s"} />
       </Dialog>
-      <div className="md:m-3 p-3 border md:rounded-lg border-slate-400 shadow-slate-500 md:shadow-sm bg-white">
+      <div className="px-2 py-2 dark:bg-slate-800">
         <div className="grid md:flex md:justify-between">
-          <strong className="text-lg py-2 md:text-md lg:text-2xl">
+          <strong className="text-sm dark:text-white">
             Student Admission List
           </strong>
           <div className="flex gap-4">
             <Button
               label="New Enquiry"
               icon={<FaPlus />}
-              className="flex items-center justify-center rounded-lg gap-2 text-sm p-3 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+              className="flex items-center justify-center rounded-lg gap-2 text-sm p-2 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => setOpenModel2(true)}
             />
 
             <Button
               label="New Admission"
               icon={<FaPlus />}
-              className="flex gap-2 text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+              className="flex gap-2 text-sm p-2  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => {
                 setMode("s");
                 setOpenModel(true);
@@ -285,38 +283,40 @@ function Admission(_params) {
         </div>
         <div className="grid lg:grid-cols-2 gap-3">
           <div className="grid">
-            <label className="text-sm pt-3">Registration Date</label>
-            <Calendar
-              touchUI
-              placeholder="DD/MM/YYYY"
-              className="h-10 border-slate-500 border rounded-md"
-              inputClassName="pl-3 "
-            />
-          </div>
-
-          <div className="flex gap-2 mt-8 ">
-            <Button
-              icon={<FaFilter />}
-              className="flex gap-2 bg-blue-500 text-white px-3 py-3"
-            >
-              <span className="hidden md:block">Filter</span>
-            </Button>
-            <Button
-              icon={<FaRedo />}
-              className="flex gap-2 bg-red-500 text-white px-3 py-3"
-            >
-              <span className="hidden md:block">Clear</span>
-            </Button>
+            <label className="text-sm dark:text-white">
+              Registration Date
+            </label>
+            <div className="flex gap-2 items-center ">
+              <Calendar
+                touchUI
+                placeholder="DD/MM/YYYY"
+                className="w-40 border-slate-500 border rounded-md"
+                inputClassName="h-8 pl-3 dark:text-white dark:bg-black "
+              />
+              <Button
+                icon={<FaFilter size={10} />}
+                className="flex gap-2 bg-blue-500 text-white h-8 px-2"
+              >
+                <span className="hidden md:block">Filter</span>
+              </Button>
+              <Button
+                icon={<FaRedo size={10} />}
+                className="flex gap-2 bg-red-500 text-white h-8 px-2"
+              >
+                <span className="hidden md:block">Clear</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="relative bg-white md:rounded-lg border border-slate-400 shadow-slate-500 md:shadow-md md:m-4 p-2 overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-800 md:rounded-lg p-2 overflow-hidden">
         <DataTable
           value={admission}
           size="small"
           showGridlines
           stripedRows
+          className="dark:bg-slate-800"
           header={header}
           tableStyle={{ minWidth: "50rem" }}
         >

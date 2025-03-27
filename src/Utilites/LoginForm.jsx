@@ -4,7 +4,7 @@ import { Password } from "primereact/password";
 import { Message } from "primereact/message";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, userlogin } from "../Redux/Slice/UserSlice";
+import { userlogin } from "../Redux/Slice/UserSlice";
 import { useNavigate } from "react-router-dom";
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: null, password: null });

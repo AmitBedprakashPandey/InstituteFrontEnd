@@ -1,33 +1,34 @@
-import NavBar from "../NavBar";
-import { Menu } from "primereact/menu";
 import { PanelMenu } from "primereact/panelmenu";
 import { useState } from "react";
 import SchoolForm from "../../Utilites/SchoolForm";
 import { FaSchool, FaBuildingColumns } from "react-icons/fa6";
 import CourseType from "./tab/CourseType";
-import { Outlet, useNavigate } from "react-router-dom";
-export default function School(params) {
+// import { useNavigate } from "react-router-dom";
+export default function Setup(params) {
   const [selectedItem, setSelectedItem] = useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  
   const items = [
     {
       label: `School Details`,
       icon: <FaSchool size={20} className="mr-3" />,
       command: () => setSelectedItem("school"),
     },
-    // {
-    //   label: "Common Data",
-    //   items: [
-    //     {
-    //       label: "Course Type",
-    //       command: () => setSelectedItem("Course Type"),
-    //     },
-    //     {
-    //       label: "Payment Mode",
-    //       command: () => setSelectedItem("Payment Mode"),
-    //     },
-    //   ],
-    // },
+
+    {
+      label: "Common Data",
+      items: [
+        {
+          label: "Course Type",
+          command: () => setSelectedItem("Course Type"),
+        },
+        {
+          label: "Payment Mode",
+          command: () => setSelectedItem("Payment Mode"),
+        },
+      ],
+    },
+
     {
       label: "Account",
       icon: <FaBuildingColumns size={20} className="mr-3" />,
@@ -39,6 +40,7 @@ export default function School(params) {
       ],
     },
   ];
+
   const renderContent = () => {
     switch (selectedItem) {
       case "school":

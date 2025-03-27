@@ -21,6 +21,7 @@ import { getEnquirybyId, updateEnquiry } from "../../Redux/Slice/EnquirySlice";
 import { createAdmission } from "../../Redux/Slice/AdmissionSlice";
 import EnquiryForm from "../../Utilites/EnquiryForm";
 import NavBar from "../NavBar";
+import Navbar2 from "../Nabar2";
 
 function Enquiry(_params) {
   const [openModel, setOpenModel] = useState(false);
@@ -240,27 +241,30 @@ function Enquiry(_params) {
     );
   };
   return (
-    <div className="relative">
+    <div className="relative bg-white dark:bg-slate-800 h-full">
+      {/* <Navbar2 title={"Enquiry"} /> */}
       <Dialog
         header="Enquiry Form"
         position="top"
-        className="w-full h-full m-0 "
         maximized={true}
-        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden"
-        headerClassName="px-6 py-3 border-b"
+        draggable={false}        
+        className="w-full h-full m-0 dark:bg-slate-800"
+        contentClassName="px-4 lg:px-10 pt-3 lg:overflow-y-hidden dark:bg-slate-800"
+        headerClassName="px-6 py-3 border-b dark:bg-slate-800 dark:text-white"
         visible={openModel}
         onHide={() => setOpenModel(false)}
       >
         <EnquiryForm mode={mode} data={selectedData} />
       </Dialog>
-      <div className="md:m-3 p-3 border md:rounded-lg border-slate-400 shadow-slate-500 md:shadow-sm bg-white">
+
+      <div className="md:m-0 py-2 px-4 dark:bg-slate-800 bg-white">
         <div className="flex justify-between">
-          <strong className="">Register Enquries</strong>
+          <strong className="dark:text-white text-sm">Register Enquries</strong>
           <div>
             <Button
               label="New Enquiry"
               icon={<FaPlus size={20} />}
-              className="flex gap-3  text-sm p-3  bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
+              className="flex gap-3  text-sm p-1.5 bg-blue-500 text-white capitalize hover:bg-blue-600 duration-300"
               onClick={() => {
                 setMode("s");
                 setOpenModel(true);
@@ -268,36 +272,36 @@ function Enquiry(_params) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div className="grid">
-            <label>From Date</label>
+        <div className="flex gap-3">
+          <div className="flex flex-col">
+            <label className="dark:text-white text-xs">From Date</label>
             <Calendar
               touchUI
               name="fromdate"
-              dateFormat="dd/mm/yyyy"
+              dateFormat="dd/mm/yy"
               value={dateData.fromDate}
               onChange={dateDatahandler}
               placeholder="DD/MM/YYYY"
-              className="min-h-12 border-slate-500 border rounded-md"
-              inputClassName="pl-3"
+              className=" w-48 border-slate-500 border rounded-md"
+              inputClassName="min-h-5 dark:text-white pl-3 dark:bg-slate-800"
             />
           </div>
 
-          <div className="grid">
-            <label>To Date</label>
+          <div className="flex flex-col">
+            <label className="dark:text-white text-xs">To Date</label>
             <Calendar
               touchUI
               name="enddate"
               value={dateData.endDate}
-              dateFormat="dd/mm/yyyy"
+              dateFormat="dd/mm/yy"
               onChange={dateDatahandler}
               placeholder="DD/MM/YYYY"
-              className="min-h-12 border-slate-500 border rounded-md"
-              inputClassName="pl-3"
+              className="w-48 border-slate-500 dark:bg-slate-800 border rounded-md"
+              inputClassName="pl-3 dark:text-white min-h-5 dark:bg-slate-800"
             />
           </div>
 
-          <div className="flex gap-2 md:mt-7">
+          <div className="flex gap-2 mt-4">
             <Button
               disabled={
                 dateData.fromDate !== null && dateData.endDate !== null
@@ -305,22 +309,22 @@ function Enquiry(_params) {
                   : true
               }
               onClick={dateFilterhandler}
-              className="capitalize flex gap-3 bg-blue-500 hover:bg-blue-600 duration-200 text-white px-3 w-full lg:w-24"
+              className="capitalize text-xs flex gap-3 bg-blue-500 hover:bg-blue-600 duration-200 text-white p-1.5 h-6"
             >
-              <FaFilter size={20} />
+              <FaFilter size={10} />
               filter
             </Button>
             <Button
               onClick={() => setDateData({ fromDate: null, endDate: null })}
-              className="flex gap-3 bg-red-500 hover:bg-red-600 duration-200 text-white p-3 w-full lg:w-24  "
+              className="flex gap-3 bg-red-500 hover:bg-red-600 duration-200 text-white  h-6 p-1.5"
             >
-              <FaRedo size={20} />
+              <FaRedo size={10} />
               <span className="">Clear</span>
             </Button>
           </div>
         </div>
       </div>
-      <div className="relative bg-white md:rounded-lg border border-slate-400 shadow-slate-500 md:shadow-md md:m-4 p-2 overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-800 md:m-0 p-2 overflow-hidden">
         <DataTable
           value={enquiry}
           size="small"
