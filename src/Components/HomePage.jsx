@@ -12,6 +12,7 @@ import {
   YesButton,
 } from "../Components/UI/Buttons";
 import { Outlet } from "react-router-dom";
+import CameraView from "../Utilites/CameraView";
 export default function HomePage(params) {
   
 
@@ -19,10 +20,13 @@ export default function HomePage(params) {
     <div className="flex flex-col relative h-screen w-screen dark:bg-slate-800">
       <NavBar />
       <div className="w-full h-full flex relative">
-        <SideBar />
+        {/* <SideBar /> */}
         <main className="border-l-2 relative flex-1 ">
-          <Outlet />
+          {/* <Outlet /> */}
+
+          <CameraView />
         </main>
+
       </div>
     </div>
   );
